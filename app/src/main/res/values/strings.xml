@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SweetHub</string>
+    <string name="image_desc">Image description</string>
+    <string name="default_web_client_id">417451429880-4f8ho14mr9j18lnpkv9n5hpp6lautp56.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">531525219866822</string>
+    <string name="fb_login_protocol_scheme">fb531525219866822</string>
+    <string name="facebook_client_token">498f332f3750c1342444db35ba1a9fa3</string>
+</resources>

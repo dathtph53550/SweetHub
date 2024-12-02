@@ -1,0 +1,107 @@
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="#F9F9F9"
+        android:padding="16dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hi, Darren"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="0dp"/>
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find and Get Your Best Cake"
+            android:textColor="#777777"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="0dp"/>
+
+        <!-- Search Box -->
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/search_box_background"
+            android:hint="Search"
+            android:paddingStart="15dp"
+            android:imeOptions="actionSearch"
+            android:drawableStart="@drawable/sert"
+            android:drawablePadding="8dp"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <!-- Slideshow -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerSlideshow"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Categories -->
+        <TextView
+            android:id="@+id/tvCategoryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Browse By Category"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/rycCategory"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="8dp"
+           android:layout_marginBottom="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+           android:orientation="horizontal"
+
+           />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_add"
+            android:layout_margin="10dp"/>
+
+        <!-- RecyclerView for Products -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProducts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_weight="1"/>
+
+        <!-- Bottom Navigation -->
+
+    </LinearLayout>
+
+
+
+
+
+</androidx.core.widget.NestedScrollView>

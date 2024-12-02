@@ -1,0 +1,2046 @@
+Subject: [PATCH] 27/11/2024 Hiện Thị List Category và Product ( addProduct )
+---
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/build.gradle.kts	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -53,6 +53,16 @@
+     implementation ("com.github.bumptech.glide:glide:4.15.1")
+     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+     implementation ("com.google.android.material:material:1.9.0")
++    implementation ("com.squareup.retrofit2:retrofit:2.7.1")
++    implementation ("com.squareup.retrofit2:converter-gson:2.1.0")
++    implementation ("com.squareup.okhttp3:logging-interceptor:3.4.1")
++    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
++    implementation ("com.google.code.gson:gson:2.10.1")
++    implementation ("com.github.bumptech.glide:glide:4.16.0")
++    implementation ("com.github.bumptech.glide:glide:4.15.1")
++    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
++    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
++
+ 
+ 
+ }
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/AndroidManifest.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -4,6 +4,8 @@
+ 
+     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+     <uses-permission
+         android:name="com.google.android.gms.permission.AD_ID"
+         tools:node="remove" />
+@@ -14,12 +16,17 @@
+         android:fullBackupContent="@xml/backup_rules"
+         android:icon="@mipmap/ic_launcher"
+         android:label="@string/app_name"
++        android:networkSecurityConfig="@xml/network_security_config"
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/Theme.SweetHub"
++        android:usesCleartextTraffic="true"
+         tools:targetApi="31">
+         <activity
+-            android:name=".MainActivity"
++            android:name=".AddProductActivity"
++            android:exported="false" />
++        <activity
++            android:name=".Splash_ScreenActivity"
+             android:exported="false" />
+ 
+         <meta-data
+@@ -53,7 +60,7 @@
+             android:name=".IntroductionActivity"
+             android:exported="false" />
+         <activity
+-            android:name=".Splash_ScreenActivity"
++            android:name=".MainActivity"
+             android:exported="true">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+Index: app/src/main/java/com/example/sweethub/Adapter/CategoryAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Adapter/CategoryAdapter.java b/app/src/main/java/com/example/sweethub/Adapter/CategoryAdapter.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/Adapter/CategoryAdapter.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,58 @@
++package com.example.sweethub.Adapter;
++
++import android.app.Activity;
++import android.content.Context;
++import android.util.Log;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.example.sweethub.Fragment.FragmentTest;
++import com.example.sweethub.Model.Category;
++import com.example.sweethub.Model.Product;
++import com.example.sweethub.R;
++
++import java.util.ArrayList;
++
++public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryHolder> {
++
++    Context context;
++    ArrayList<Category> list;
++
++    public CategoryAdapter(Context context, ArrayList<Category> list) {
++        this.context = context;
++        this.list = list;
++    }
++
++
++
++    @NonNull
++    @Override
++    public CategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View v = ((Activity)context).getLayoutInflater().inflate(R.layout.item_category,parent,false);
++        return new CategoryHolder(v);
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull CategoryHolder holder, int position) {
++        Category category = list.get(position);
++        holder.tvCategoryName.setText(category.getName());
++        Log.d("zzzzz", "onBindViewHolder: " + category.getName());
++    }
++
++    @Override
++    public int getItemCount() {
++        return list.size();
++    }
++
++    class CategoryHolder extends RecyclerView.ViewHolder {
++        TextView tvCategoryName;
++        public CategoryHolder(@NonNull View itemView) {
++            super(itemView);
++            tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
++        }
++    }
++}
+Index: app/src/main/java/com/example/sweethub/Adapter/ImageAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Adapter/ImageAdapter.java b/app/src/main/java/com/example/sweethub/Adapter/ImageAdapter.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/Adapter/ImageAdapter.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,50 @@
++package com.example.sweethub.Adapter;
++
++import android.content.Context;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.bumptech.glide.Glide;
++import com.example.sweethub.R;
++
++import java.util.ArrayList;
++
++public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder> {
++
++    Context context;
++    ArrayList<String> list;
++
++    @NonNull
++    @Override
++    public ImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View v = View.inflate(context, R.layout.item_image, null);
++        return new ImageHolder(v);
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
++        String url = list.get(position);
++        String newUrl = url.replace("localhost", "192.168.0.100");
++        Glide.with(context)
++                .load(newUrl)
++                .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))
++                .into(holder.img);
++    }
++
++    @Override
++    public int getItemCount() {
++        return list.size();
++    }
++
++    class ImageHolder extends RecyclerView.ViewHolder {
++        ImageView img;
++        public ImageHolder(@NonNull View itemView) {
++            super(itemView);
++            img = itemView.findViewById(R.id.img);
++        }
++    }
++}
+Index: app/src/main/java/com/example/sweethub/Adapter/ProductAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter.java b/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter.java
+--- a/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -34,7 +34,7 @@
+         Product product = productList.get(position);
+         holder.tvProductName.setText(product.getName());
+         holder.tvProductPrice.setText(product.getPrice() + " đ");
+-        holder.ivProductImage.setImageResource(product.getImage());
++//        holder.ivProductImage.setImageResource(Integer.parseInt(product.getImage()));
+     }
+ 
+     @Override
+Index: app/src/main/java/com/example/sweethub/Adapter/ProductAdapter1.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter1.java b/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter1.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/Adapter/ProductAdapter1.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,88 @@
++package com.example.sweethub.Adapter;
++
++import android.content.Context;
++import android.util.Log;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageView;
++import android.widget.TextView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.bumptech.glide.Glide;
++import com.example.sweethub.Model.Product;
++import com.example.sweethub.R;
++import com.example.sweethub.servers.HttpRequest;
++
++import java.util.ArrayList;
++
++public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.ProductHolder> {
++
++    Context context;
++    ArrayList<Product> list;
++    FruitClick fruitClick;
++    HttpRequest httpRequest;
++
++    public ProductAdapter1(Context context, ArrayList<Product> list, FruitClick fruitClick) {
++        this.context = context;
++        this.list = list;
++        this.fruitClick = fruitClick;
++    }
++
++    @NonNull
++    @Override
++    public ProductHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View v = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
++        return new ProductHolder(v);
++    }
++
++    @Override
++    public void onBindViewHolder(@NonNull ProductHolder holder, int position) {
++
++//        if (list == null || list.isEmpty()) {
++//            Log.d("ProductAdapter", "List is empty or null.");
++//            return; // Exit early if the list is empty
++//        }
++
++        // Now it's safe to access elements from the list
++        httpRequest = new HttpRequest();
++        Product product = list.get(position);
++        holder.tvProductName.setText(product.getName());
++        holder.tvProductPrice.setText(product.getPrice() + " đ");
++        Log.d("image", "onBindViewHolder: " + product.getImage().get(0));
++        String url = product.getImage().get(0);
++        String newUrl = url.replace("localhost", "192.168.0.100");
++        Glide.with(context)
++                .load(newUrl)
++                .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))
++                .into(holder.ivProductImage);
++        Log.d("url", "onBindViewHolder: " + newUrl);
++
++    }
++
++    @Override
++    public int getItemCount() {
++        return list.size();
++    }
++
++    public interface FruitClick {
++        void delete(Product product);
++        void edit(Product product);
++
++        void showDetail(Product product);
++    }
++
++    class ProductHolder extends RecyclerView.ViewHolder {
++        TextView tvProductName, tvProductPrice;
++        ImageView ivProductImage;
++
++        public ProductHolder(@NonNull View itemView) {
++            super(itemView);
++            tvProductName = itemView.findViewById(R.id.tvProductName);
++            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
++            ivProductImage = itemView.findViewById(R.id.ivProductImage);
++        }
++    }
++}
+Index: app/src/main/java/com/example/sweethub/AddProductActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/AddProductActivity.java b/app/src/main/java/com/example/sweethub/AddProductActivity.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/AddProductActivity.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,300 @@
++package com.example.sweethub;
++
++import android.app.Activity;
++import android.content.Intent;
++import android.net.Uri;
++import android.os.Bundle;
++import android.util.Log;
++import android.view.View;
++import android.widget.AdapterView;
++import android.widget.ArrayAdapter;
++import android.widget.Button;
++import android.widget.EditText;
++import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.Spinner;
++import android.widget.Toast;
++
++import androidx.activity.EdgeToEdge;
++import androidx.activity.result.ActivityResult;
++import androidx.activity.result.ActivityResultCallback;
++import androidx.activity.result.ActivityResultLauncher;
++import androidx.activity.result.contract.ActivityResultContracts;
++import androidx.appcompat.app.AppCompatActivity;
++import androidx.core.graphics.Insets;
++import androidx.core.view.ViewCompat;
++import androidx.core.view.WindowInsetsCompat;
++
++import com.bumptech.glide.Glide;
++import com.example.sweethub.Fragment.FragmentHome;
++import com.example.sweethub.Model.Category;
++import com.example.sweethub.Model.Product;
++import com.example.sweethub.Model.Response;
++import com.example.sweethub.servers.HttpRequest;
++
++import java.io.File;
++import java.io.FileNotFoundException;
++import java.io.FileOutputStream;
++import java.io.IOException;
++import java.io.InputStream;
++import java.io.OutputStream;
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.Map;
++
++import okhttp3.MediaType;
++import okhttp3.MultipartBody;
++import okhttp3.RequestBody;
++import retrofit2.Call;
++import retrofit2.Callback;
++
++public class AddProductActivity extends AppCompatActivity {
++
++    HttpRequest httpRequest;
++    EditText etName, etQuantity, etPrice, etStatus,edtDescribe;
++    Spinner spinnerCompany;
++    Button btnAdd,btnBack;
++    ImageView  ivChoseImage;
++    String id_cate;
++    ArrayList<Product> listProduct;
++    ArrayList<File> listImage;
++    ArrayList<Uri> imageUris = new ArrayList<>();
++    ArrayList<Category> listCategory;
++
++    @Override
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
++        EdgeToEdge.enable(this);
++        setContentView(R.layout.activity_add_product);
++        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
++            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
++            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
++            return insets;
++        });
++        httpRequest = new HttpRequest();
++        etName = findViewById(R.id.etName);
++        etQuantity = findViewById(R.id.etQuantity);
++        etPrice = findViewById(R.id.etPrice);
++        edtDescribe = findViewById(R.id.etDescribe);
++        etStatus = findViewById(R.id.etStatus);
++        btnAdd = findViewById(R.id.btnAdd);
++        ivChoseImage = findViewById(R.id.ivChoseImage);
++        listImage = new ArrayList<>();
++        listCategory = new ArrayList<>();
++        spinnerCompany = findViewById(R.id.spinnerCompany);
++        btnBack = findViewById(R.id.btnBack);
++
++        httpRequest.callAPI().getListCategory().enqueue(getCategoryAPI);
++        spinnerCompany.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
++            @Override
++            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
++                id_cate = listCategory.get(position).getId();
++                Log.d("idd", "onItemSelected: " + id_cate);
++            }
++
++            @Override
++            public void onNothingSelected(AdapterView<?> parent) {
++
++            }
++        });
++        spinnerCompany.setSelection(0);
++
++
++        //
++        ivChoseImage.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                chooseImage();
++            }
++        });
++
++        btnBack.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                finish();
++            }
++        });
++
++        //
++        btnAdd.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                Map<String , RequestBody> mapRequestBody = new HashMap<>();
++                String _name = etName.getText().toString().trim();
++                String _quantity = etQuantity.getText().toString().trim();
++                String _price = etPrice.getText().toString().trim();
++                String _status = etStatus.getText().toString().trim();
++                String _describe = edtDescribe.getText().toString().trim();
++
++                mapRequestBody.put("name", getRequestBody(_name));
++                mapRequestBody.put("quantity", getRequestBody(_quantity));
++                mapRequestBody.put("price", getRequestBody(_price));
++                mapRequestBody.put("status", getRequestBody(_status));
++                mapRequestBody.put("describe", getRequestBody(_describe));
++                mapRequestBody.put("id_category)", getRequestBody(id_cate));
++                Toast.makeText(AddProductActivity.this, " " + _name + " " + _quantity + " " + _price + " " + _status + " " + _describe, Toast.LENGTH_SHORT).show();
++                ArrayList<MultipartBody.Part> _ds_image = new ArrayList<>();
++                listImage.forEach(file1 -> {
++                    RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file1);
++                    MultipartBody.Part multipartBodyPart = MultipartBody.Part.createFormData("image", file1.getName(),requestFile);
++                    _ds_image.add(multipartBodyPart);
++                });
++                httpRequest.callAPI().addProductWithFileImage(mapRequestBody, _ds_image).enqueue(responseFruit);
++            }
++        });
++
++    }
++
++    Callback<Response<Product>> responseFruit = new Callback<Response<Product>>() {
++        @Override
++        public void onResponse(Call<Response<Product>> call, retrofit2.Response<Response<Product>> response) {
++            if (response.isSuccessful()) {
++                Log.d("123123", "onResponse: " + response.body().getStatus());
++                if (response.body().getStatus()==200) {
++//                    Toast.makeText(AddProductActivity.this, "Thêm mới thành công", Toast.LENGTH_SHORT).show();
++//                    finish();
++                    Intent intent = new Intent(AddProductActivity.this, MainActivity.class);
++                    intent.putExtra("navigateTo", "FragmentHome"); // Truyền dữ liệu để điều hướng
++                    intent.putExtra("newProduct", response.body().getData()); // Nếu cần gửi dữ liệu sản phẩm mới
++                    startActivity(intent);
++                    finish();
++                }
++            }
++        }
++
++        @Override
++        public void onFailure(Call<Response<Product>> call, Throwable t) {
++            Toast.makeText(AddProductActivity.this, "Thêm  thành công", Toast.LENGTH_SHORT).show();
++            Log.e("zzzzzzzzzz", "onFailure: "+t.getMessage());
++        }
++    };
++
++    private void chooseImage() {
++//        if (ContextCompat.checkSelfPermission(RegisterActivity.this,
++//                android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
++        Log.d("123123", "chooseAvatar: " +123123);
++        Intent intent = new Intent();
++        intent.setType("image/*");
++        intent.setAction(Intent.ACTION_GET_CONTENT);
++        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
++        getImage.launch(intent);
++//        }else {
++//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
++//
++//        }
++    }
++
++    private RequestBody getRequestBody(String value) {
++        return RequestBody.create(MediaType.parse("multipart/form-data"),value);
++    }
++
++    ActivityResultLauncher<Intent> getImage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
++            new ActivityResultCallback<ActivityResult>() {
++                @Override
++                public void onActivityResult(ActivityResult o) {
++                    if (o.getResultCode() == Activity.RESULT_OK) {
++                        // Clear danh sách cũ
++                        listImage.clear();
++                        imageUris.clear();
++
++                        Intent data = o.getData();
++                        if (data != null) {
++                            // Nếu chọn nhiều ảnh
++                            if (data.getClipData() != null) {
++                                int count = data.getClipData().getItemCount();
++                                for (int i = 0; i < count; i++) {
++                                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
++                                    imageUris.add(imageUri);
++
++                                    // Thêm File vào listImage
++                                    File file = createFileFormUri(imageUri, "image" + i);
++                                    listImage.add(file);
++                                }
++                            } else if (data.getData() != null) { // Nếu chỉ chọn 1 ảnh
++                                Uri imageUri = data.getData();
++                                imageUris.add(imageUri);
++
++                                // Thêm File vào listImage
++                                File file = createFileFormUri(imageUri, "image");
++                                listImage.add(file);
++                            }
++
++                            // Hiển thị tất cả ảnh đã chọn
++                            displaySelectedImages();
++                        }
++                    }
++                }
++            });
++
++    private void displaySelectedImages() {
++        // Lấy container LinearLayout
++        LinearLayout imageContainer = findViewById(R.id.imageContainer);
++
++        // Xóa tất cả các ảnh cũ
++        imageContainer.removeAllViews();
++
++        // Dùng Glide để load danh sách ảnh mới
++        for (Uri uri : imageUris) {
++            ImageView imageView = new ImageView(this);
++            Log.d("image", "displaySelectedImages: "+ uri);
++            Glide.with(this)
++                    .load(uri)
++                    .override(200, 350) // Kích thước ảnh nhỏ hơn
++                    .centerCrop()
++                    .thumbnail(Glide.with(this).load(R.drawable.baseline_broken_image_24))
++                    .into(imageView);
++
++            // Thêm ImageView mới vào container
++            imageContainer.addView(imageView);
++        }
++    }
++
++
++
++    private File createFileFormUri (Uri path, String name) {
++        File _file = new File(AddProductActivity.this.getCacheDir(), name + ".png");
++        try {
++            InputStream in = AddProductActivity.this.getContentResolver().openInputStream(path);
++            OutputStream out = new FileOutputStream(_file);
++            byte[] buf = new byte[1024];
++            int len;
++            while ((len = in.read(buf)) >0) {
++                out.write(buf, 0, len);
++            }
++            out.close();
++            in.close();
++            Log.d("123123", "createFileFormUri: " +_file);
++            return _file;
++        } catch (FileNotFoundException e) {
++            e.printStackTrace();
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
++
++        return null;
++    }
++
++    Callback<Response<ArrayList<Category>>> getCategoryAPI = new Callback<Response<ArrayList<Category>>>() {
++        @Override
++        public void onResponse(Call<Response<ArrayList<Category>>> call, retrofit2.Response<Response<ArrayList<Category>>> response) {
++            if (response.isSuccessful()) {
++                if (response.body().getStatus() == 200) {
++                    listCategory = response.body().getData();
++                    String[] items = new String[listCategory.size()];
++
++                    for (int i = 0; i< listCategory.size(); i++) {
++                        items[i] = listCategory.get(i).getName();
++                    }
++
++                    ArrayAdapter<String> adapterSpin = new ArrayAdapter<>(AddProductActivity.this, android.R.layout.simple_spinner_item, items);
++                    spinnerCompany.setAdapter(adapterSpin);
++                }
++            }
++        }
++
++        @Override
++        public void onFailure(Call<Response<ArrayList<Category>>> call, Throwable t) {
++
++        }
++    };
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/sweethub/Fragment/FragmentHome.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Fragment/FragmentHome.java b/app/src/main/java/com/example/sweethub/Fragment/FragmentHome.java
+--- a/app/src/main/java/com/example/sweethub/Fragment/FragmentHome.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/Fragment/FragmentHome.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -1,5 +1,9 @@
+ package com.example.sweethub.Fragment;
+ 
++import android.app.Activity;
++import android.content.Context;
++import android.content.Intent;
++import android.content.SharedPreferences;
+ import android.os.Bundle;
+ import android.text.Editable;
+ import android.text.TextWatcher;
+@@ -11,6 +15,8 @@
+ import android.widget.EditText;
+ import android.widget.Toast;
+ 
++import androidx.activity.result.ActivityResultLauncher;
++import androidx.activity.result.contract.ActivityResultContracts;
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+ import androidx.fragment.app.Fragment;
+@@ -19,14 +25,21 @@
+ import androidx.recyclerview.widget.RecyclerView;
+ import androidx.viewpager2.widget.ViewPager2;
+ 
++import com.example.sweethub.Adapter.CategoryAdapter;
+ import com.example.sweethub.Adapter.ProductAdapter;
++import com.example.sweethub.Adapter.ProductAdapter1;
+ import com.example.sweethub.Adapter.SlideshowAdapter;
++import com.example.sweethub.AddProductActivity;
+ import com.example.sweethub.HomeActivity;
++import com.example.sweethub.Model.Category;
+ import com.example.sweethub.Model.Product;
++import com.example.sweethub.Model.Response;
+ import com.example.sweethub.R;
++import com.example.sweethub.servers.HttpRequest;
+ import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.android.material.bottomnavigation.BottomNavigationView;
++import com.google.android.material.floatingactionbutton.FloatingActionButton;
+ import com.google.firebase.FirebaseApp;
+ import com.google.firebase.firestore.FirebaseFirestore;
+ import com.google.firebase.firestore.QueryDocumentSnapshot;
+@@ -35,20 +48,27 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+-public class FragmentHome extends Fragment {
++import retrofit2.Call;
++import retrofit2.Callback;
++
++public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick{
+     FirebaseFirestore db;
+     private EditText etSearch;
+     private ViewPager2 viewPagerSlideshow;
+     private RecyclerView rvProducts;
+-    private Button btnCake, btnDonuts, btnCookies;
+-
+-    private ProductAdapter productAdapter;
+-    private List<Product> productList;
+-    private List<Product> filteredProducts;
+-
++    private ArrayList<Product> listProduct;
+     private int currentPosition = 0;
++    ProductAdapter1 adapterProduct;
++    FloatingActionButton btnAdd;
+ 
++    RecyclerView rycCategory;
++    ArrayList<Category> listCate;
++    CategoryAdapter adapterCate;
++    HttpRequest  httpRequest;
+ 
++
++    SharedPreferences sharedPreferences;
++    String token;
+ 
+     @Nullable
+     @Override
+@@ -59,69 +79,114 @@
+     @Override
+     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+         super.onViewCreated(view, savedInstanceState);
++
++
+         FirebaseApp.initializeApp(getContext());
+         db = FirebaseFirestore.getInstance();
++        httpRequest = new HttpRequest();
++        btnAdd = view.findViewById(R.id.btnAdd);
++        //getListCategory nhe
++        rycCategory = view.findViewById(R.id.rycCategory);
++        listCate = new ArrayList<>();
++        adapterCate = new CategoryAdapter(getContext(),listCate);
++        rycCategory.setAdapter(adapterCate);
++
++        //GetListCAtegory
++        httpRequest.callAPI().getListCategory().enqueue(new Callback<Response<ArrayList<Category>>>() {
++            @Override
++            public void onResponse(Call<Response<ArrayList<Category>>> call, retrofit2.Response<Response<ArrayList<Category>>> response) {
++                if(response.isSuccessful()){
++                    if(response.body().getStatus() == 200){
++                        listCate = response.body().getData();
++                        adapterCate = new CategoryAdapter(getContext(),listCate);
++                        rycCategory.setAdapter(adapterCate);
++                        adapterCate.notifyDataSetChanged();
++                        Log.d("zzzz", "onResponse: " + listCate.size());
++                    }
++                }
++            }
++
++            @Override
++            public void onFailure(Call<Response<ArrayList<Category>>> call, Throwable t) {
++
++            }
++        });
++
++
+ 
+ 
+         etSearch = view.findViewById(R.id.etSearch);
+         viewPagerSlideshow = view.findViewById(R.id.viewPagerSlideshow);
+         rvProducts = view.findViewById(R.id.rvProducts);
+ 
++        sharedPreferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
++        token = sharedPreferences.getString("token","");
++
+ 
+-        btnCake = view.findViewById(R.id.btnCake);
+-        btnDonuts = view.findViewById(R.id.btnDonuts);
+-        btnCookies = view.findViewById(R.id.btnCookies);
+ 
+-//        rvProducts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
++
+         rvProducts.setLayoutManager(new GridLayoutManager(getContext(), 2));
+         rvProducts.setNestedScrollingEnabled(true);
+-        // Initialize Product List and Adapter
+-        productList = new ArrayList<>();
+-        filteredProducts = new ArrayList<>(); // Initialize filteredProducts
+-        productAdapter = new ProductAdapter(filteredProducts);
+-        rvProducts.setAdapter(productAdapter);
++        listProduct = new ArrayList<>();
++        adapterProduct = new ProductAdapter1(getContext(),listProduct,FragmentHome.this);
++
++        rvProducts.setAdapter(adapterProduct);
++
++        Bundle args = getArguments();
++        if (args != null) {
++            Product newProduct = (Product) args.getSerializable("newProduct");
++            if (newProduct != null) {
++                listProduct.add(newProduct); // Thêm sản phẩm mới vào danh sách
++                adapterProduct.notifyDataSetChanged(); // Cập nhật RecyclerView/ListView
++            }
++        }
++
++//        adapterProduct.notifyDataSetChanged();
++        //Get List Product
++        httpRequest.callAPI().getListFruit("Bearer" + token).enqueue(new Callback<Response<ArrayList<Product>>>() {
++            @Override
++            public void onResponse(Call<Response<ArrayList<Product>>> call, retrofit2.Response<Response<ArrayList<Product>>> response) {
++                if (response.isSuccessful()){
++                    if(response.body().getStatus() == 200){
++                        listProduct.clear();
++                        listProduct = response.body().getData();
++                        adapterProduct = new ProductAdapter1(getContext(),listProduct,FragmentHome.this);
++                        rvProducts.setAdapter(adapterProduct);
++                        adapterProduct.notifyDataSetChanged();
++                    }
++                }
++            }
++
++            @Override
++            public void onFailure(Call<Response<ArrayList<Product>>> call, Throwable t) {
++
++            }
++        });
+ 
+         // Setup Event Listeners for Buttons (Category Filter)
+ //        btnCake.setOnClickListener(v -> filterProductsByCategory("Cake"));
+ //        btnDonuts.setOnClickListener(v -> filterProductsByCategory("Donuts"));
+ //        btnCookies.setOnClickListener(v -> filterProductsByCategory("Cookies"));
++        btnAdd.setOnClickListener(new View.OnClickListener() {
++            @Override
++            public void onClick(View v) {
++                startActivity(new Intent(getContext(), AddProductActivity.class));
++            }
++        });
+ 
+ 
+ 
+ 
++//        docDuLieu();
+         // Setup slideshow
+         setupSlideshow();
+ 
+         // Load product data
+-        loadProducts();
+-
++//        loadProducts();
+         // Search functionality
+-        etSearch.addTextChangedListener(new TextWatcher() {
+-            @Override
+-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+-
+-            @Override
+-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+-                filterProductsBySearch(charSequence.toString());
+-            }
+ 
+-            @Override
+-            public void afterTextChanged(Editable editable) {}
+-        });
+     }
+ 
+-    // Search product filter
+-    private void filterProductsBySearch(String query) {
+-        List<Product> filteredList = new ArrayList<>();
+-        for (Product product : productList) {
+-            if (product.getName().toLowerCase().contains(query.toLowerCase())) {
+-                filteredList.add(product);
+-            }
+-        }
+-        filteredProducts.clear();
+-        filteredProducts.addAll(filteredList);
+-        productAdapter.notifyDataSetChanged();
+-    }
+ 
+     // Category filter
+ //    private void filterProductsByCategory(String category) {
+@@ -162,46 +227,74 @@
+         }, 3000);
+     }
+ 
+-    private void docDuLieu(){
+-        productList.clear();
+-        db.collection("user")
+-                .get()
+-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+-                    @Override
+-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+-                        if(task.isSuccessful()){
+-                            for(QueryDocumentSnapshot document : task.getResult()){
+-                                Log.d("zzzz", "onComplete: " + document.getId() + " => " + document.getData());
+-                                String name = document.getString("name");
+-                                String describe = document.getString("describe");
+-                                String id_Category = document.getString("id_Category");
+-                                String image = document.getString("picture");
+-                                Boolean isFavorite = document.getBoolean("isFavorite");
+-                                String price = document.getString("price");
+-                                String status = document.getString("status");
+-                                Product product = new Product(document.getId(),name,Integer.parseInt(image),describe,Double.parseDouble(price),Integer.parseInt(status),isFavorite,Integer.parseInt(id_Category));
+-                                productList.add(product);
+-                            }
+-                            productAdapter.notifyDataSetChanged();
+-                        }
+-                        else{
+-                            Log.d("zzzz", "onComplete: ", task.getException());
+-                        }
+-                    }
+-                });
+-    }
++
++//    Callback<Response<ArrayList<Category>>> getListCate =new Callback<Response<ArrayList<Category>>>() {
++//        @Override
++//        public void onResponse(Call<Response<ArrayList<Category>>> call, retrofit2.Response<Response<ArrayList<Category>>> response) {
++//            if (response.isSuccessful()) {
++//                if (response.body().getStatus() == 200) {
++//                    listCate = response.body().getData();
++////                    list.clear();
++////                    list.addAll(list);
++//                    getData(listCate);
++////                    adapter.notifyDataSetChanged();
++//                    Log.d("zz", "onResponse: "+ "da vo day");
++//
++//                    Log.d("zz", "onResponse: "+ listCate.size());
++//                }
++//                else {
++//                    Log.d("zz", "onResponse: "+ "khong thi day");
++//                }
++//            }
++//        }
++//
++//        @Override
++//        public void onFailure(Call<Response<ArrayList<Category>>> call, Throwable t) {
++//            Log.d("loi", "onFailure: " + t.getMessage());
++//        }
++//    };
++
++
++
++
++
+ 
+     // Load products into the list
+-    private void loadProducts() {
+-        productList.add(new Product("1", "Black Forest Cake",R.drawable.cake1,"Bánh Ngon", 2000.0, 1));
+-        productList.add(new Product("2", "Royal Fudge Cake with Tobleron",R.drawable.cake2,"Bánh Ngon", 2000.0, 1));
+-        productList.add(new Product("3", "Classic Sansrival",R.drawable.cake3,"Bánh Ngon", 2000.0, 1));
+-        productList.add(new Product("4", "Customized Cake Rainbow",R.drawable.cake4,"Bánh Ngon", 2000.0, 1));
+-//        productList.add(new Product("Royal Fudge Cake with Tobleron", "Cake", 2000, R.drawable.cake2));
+-//        productList.add(new Product("Classic Sansrival", "Cake", 2050, R.drawable.cake3));
+-//        productList.add(new Product("Customized Cake Rainbow", "Cake", 2100, R.drawable.cake4));
++//    private void loadProducts() {
++//        Product product = new Product();
++//        product.setName("Baba");
++//        productList.add(product);
++//
++////        Category category = new Category();
++////        category.setName("Cake");
++////        listCate.add(category);
++////
++////        Category category1 = new Category();
++////        category1.setName("Cake");
++////        listCate.add(category1);
++//
++////        productList.add(new Product("Royal Fudge Cake with Tobleron", "Cake", 2000, R.drawable.cake2));
++////        productList.add(new Product("Classic Sansrival", "Cake", 2050, R.drawable.cake3));
++////        productList.add(new Product("Customized Cake Rainbow", "Cake", 2100, R.drawable.cake4));
++//
++//        filteredProducts.addAll(productList);
++//        Log.d("mmm", "loadProducts: " + filteredProducts.size());
++//        productAdapter.notifyDataSetChanged();
++//
++//    }
++
++    @Override
++    public void delete(Product product) {
+ 
+-        filteredProducts.addAll(productList);
+-        productAdapter.notifyDataSetChanged();
++    }
++
++    @Override
++    public void edit(Product product) {
++
++    }
++
++    @Override
++    public void showDetail(Product product) {
++
+     }
+ }
+Index: app/src/main/java/com/example/sweethub/Fragment/FragmentTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Fragment/FragmentTest.java b/app/src/main/java/com/example/sweethub/Fragment/FragmentTest.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/Fragment/FragmentTest.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,93 @@
++package com.example.sweethub.Fragment;
++
++import android.content.Context;
++import android.content.SharedPreferences;
++import android.os.Bundle;
++import android.util.Log;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.fragment.app.Fragment;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.example.sweethub.Adapter.CategoryAdapter;
++import com.example.sweethub.Adapter.ProductAdapter;
++import com.example.sweethub.Adapter.ProductAdapter1;
++import com.example.sweethub.Model.Category;
++import com.example.sweethub.Model.Product;
++import com.example.sweethub.Model.Response;
++import com.example.sweethub.R;
++import com.example.sweethub.servers.HttpRequest;
++
++import java.util.ArrayList;
++
++import retrofit2.Call;
++import retrofit2.Callback;
++
++public class FragmentTest extends Fragment implements ProductAdapter1.FruitClick {
++
++    RecyclerView rycCategory;
++    ArrayList<Product> list;
++    ProductAdapter1 productAdapter;
++    HttpRequest httpRequest;
++    SharedPreferences sharedPreferences;
++    String token;
++
++    @Nullable
++    @Override
++    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
++        return inflater.inflate(R.layout.fragment_test, container, false);
++    }
++
++    @Override
++    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
++        super.onViewCreated(view, savedInstanceState);
++        rycCategory = view.findViewById(R.id.rycCategory);
++        httpRequest = new HttpRequest();
++        list = new ArrayList<>();
++        sharedPreferences = getContext().getSharedPreferences("user", Context.MODE_PRIVATE);
++
++        token = sharedPreferences.getString("token","");
++        rycCategory.setAdapter(productAdapter);
++        Log.d("Token", "Token: " + token);
++
++        httpRequest.callAPI().getListFruit("Bearer" + token).enqueue(new Callback<Response<ArrayList<Product>>>() {
++            @Override
++            public void onResponse(Call<Response<ArrayList<Product>>> call, retrofit2.Response<Response<ArrayList<Product>>> response) {
++                if (response.isSuccessful()){
++                    if(response.body().getStatus() == 200){
++                        ArrayList<Product> list = response.body().getData();
++                        productAdapter = new ProductAdapter1(getContext(),list,FragmentTest.this);
++                        rycCategory.setAdapter(productAdapter);
++                        rycCategory.getAdapter().notifyDataSetChanged();
++                    }
++                }
++            }
++
++            @Override
++            public void onFailure(Call<Response<ArrayList<Product>>> call, Throwable t) {
++                Log.d("dung loi ma", "onFailure: " + t.getMessage());
++            }
++        });
++
++    }
++
++
++    @Override
++    public void delete(Product product) {
++
++    }
++
++    @Override
++    public void edit(Product product) {
++
++    }
++
++    @Override
++    public void showDetail(Product product) {
++
++    }
++}
+Index: app/src/main/java/com/example/sweethub/HomeActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/HomeActivity.java b/app/src/main/java/com/example/sweethub/HomeActivity.java
+--- a/app/src/main/java/com/example/sweethub/HomeActivity.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/HomeActivity.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -1,5 +1,6 @@
+ package com.example.sweethub;
+ 
++import android.content.Intent;
+ import android.os.Bundle;
+ import android.text.Editable;
+ import android.text.TextWatcher;
+@@ -15,6 +16,7 @@
+ 
+ import com.example.sweethub.Adapter.ProductAdapter;
+ import com.example.sweethub.Adapter.SlideshowAdapter;
++import com.example.sweethub.Fragment.FragmentHome;
+ import com.example.sweethub.Model.Product;
+ import com.google.android.material.bottomnavigation.BottomNavigationView;
+ 
+@@ -40,6 +42,15 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_home);
+ 
++        Intent intent = getIntent();
++        if (intent != null) {
++            String navigateTo = intent.getStringExtra("navigateTo");
++            if ("FragmentHome".equals(navigateTo)) {
++                Product newProduct = (Product) intent.getSerializableExtra("newProduct"); // Nhận sản phẩm mới nếu cần
++                showFragmentHome(newProduct);
++            }
++        }
++
+ 
+         etSearch = findViewById(R.id.etSearch);
+         viewPagerSlideshow = findViewById(R.id.viewPagerSlideshow);
+@@ -156,6 +167,23 @@
+         }, 3000);
+     }
+ 
++    private void showFragmentHome(Product newProduct) {
++        FragmentHome fragmentHome = new FragmentHome();
++
++        // Nếu cần gửi sản phẩm mới đến FragmentHome
++        if (newProduct != null) {
++            Bundle bundle = new Bundle();
++            bundle.putSerializable("newProduct", newProduct);
++            fragmentHome.setArguments(bundle);
++        }
++
++        // Thay thế Fragment hiện tại bằng FragmentHome
++        getSupportFragmentManager()
++                .beginTransaction()
++                .replace(R.id.frag_container002, fragmentHome)
++                .commit();
++    }
++
+     // Load products into the list
+ //    private void loadProducts() {
+ //        productList.add(new Product("Black Forest Cake", "Cake", 1950, R.drawable.cake1));
+Index: app/src/main/java/com/example/sweethub/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/MainActivity.java b/app/src/main/java/com/example/sweethub/MainActivity.java
+--- a/app/src/main/java/com/example/sweethub/MainActivity.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/MainActivity.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -16,7 +16,9 @@
+ import com.example.sweethub.Fragment.FragmentCard;
+ import com.example.sweethub.Fragment.FragmentFavourite;
+ import com.example.sweethub.Fragment.FragmentHome;
++import com.example.sweethub.Fragment.FragmentTest;
+ import com.example.sweethub.Fragment.FragmentUser;
++import com.example.sweethub.Model.Product;
+ import com.google.android.material.bottomnavigation.BottomNavigationView;
+ import com.google.android.material.navigation.NavigationBarView;
+ 
+@@ -28,6 +30,7 @@
+     FragmentHome fragmentHome = new FragmentHome();
+     FragmentFavourite fragmentFavourite = new FragmentFavourite();
+     FragmentUser fragmentUser = new FragmentUser();
++    FragmentTest fragmentTest = new FragmentTest();
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+@@ -41,6 +44,14 @@
+         });
+ 
+         Intent intent = getIntent();
++        if (intent != null) {
++            String navigateTo = intent.getStringExtra("navigateTo");
++            if ("FragmentHome".equals(navigateTo)) {
++                Product newProduct = (Product) intent.getSerializableExtra("newProduct"); // Nhận sản phẩm mới nếu cần
++                showFragmentHome(newProduct);
++            }
++        }
++
+         String email = intent.getStringExtra("userName");
+         int role = intent.getIntExtra("role", 0);
+         Log.d("zzz", "onCreate: " + email + "Role: " + role);
+@@ -79,4 +90,21 @@
+             }
+         });
+     }
++
++    private void showFragmentHome(Product newProduct) {
++        FragmentHome fragmentHome = new FragmentHome();
++
++        // Nếu cần gửi sản phẩm mới đến FragmentHome
++        if (newProduct != null) {
++            Bundle bundle = new Bundle();
++            bundle.putSerializable("newProduct", newProduct);
++            fragmentHome.setArguments(bundle);
++        }
++
++        // Thay thế Fragment hiện tại bằng FragmentHome
++        getSupportFragmentManager()
++                .beginTransaction()
++                .replace(R.id.frag_container002, fragmentHome)
++                .commit();
++    }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/sweethub/Model/Category.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Model/Category.java b/app/src/main/java/com/example/sweethub/Model/Category.java
+--- a/app/src/main/java/com/example/sweethub/Model/Category.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/Model/Category.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -1,30 +1,33 @@
+ package com.example.sweethub.Model;
+ 
++import com.google.gson.annotations.SerializedName;
++
+ public class Category {
+-    private int id_Category;
+-    private String name_Category;
++    @SerializedName("_id")
++    private String _id;
++    private String name;
+ 
+-    public Category(int id_Category, String name_Category) {
+-        this.id_Category = id_Category;
+-        this.name_Category = name_Category;
++    public Category(String id, String name) {
++        this._id = id;
++        this.name = name;
+     }
+ 
+     public Category() {
+     }
+ 
+-    public int getId_Category() {
+-        return id_Category;
++    public String getId() {
++        return _id;
+     }
+ 
+-    public void setId_Category(int id_Category) {
+-        this.id_Category = id_Category;
++    public void setId(String id) {
++        this._id = id;
+     }
+ 
+-    public String getName_Category() {
+-        return name_Category;
++    public String getName() {
++        return name;
+     }
+ 
+-    public void setName_Category(String name_Category) {
+-        this.name_Category = name_Category;
++    public void setName(String name) {
++        this.name = name;
+     }
+ }
+Index: app/src/main/java/com/example/sweethub/Model/Product.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Model/Product.java b/app/src/main/java/com/example/sweethub/Model/Product.java
+--- a/app/src/main/java/com/example/sweethub/Model/Product.java	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/java/com/example/sweethub/Model/Product.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -1,45 +1,48 @@
+ package com.example.sweethub.Model;
+ 
+-public class Product {
++import com.google.gson.annotations.SerializedName;
++
++import java.io.Serializable;
++import java.util.ArrayList;
+ 
+-    private String id;
++public class Product implements Serializable {
++
++    private String _id;
+     private String name;
+-    private int image;
++    private ArrayList<String> image;
+     private String Describe;
+-    private Double price;
+-    private int status;
++    private String price;
++    private String status;
++    private String quantity;
+     private Boolean isFavorite;
+-    private int id_Category;
+ 
+-    public Product(String id, String name, int image, String describe, Double price, int status, Boolean isFavorite, int id_Category) {
+-        this.id = id;
++    @SerializedName("_id_category")
++    private Product product;
++    private String createdAt,updateAt;
++
++    public Product(String _id, String name, ArrayList<String> Image, String describe, String price, String status,String quantity, Boolean isFavorite, Product product, String createdAt, String updateAt) {
++        this._id = _id;
+         this.name = name;
+-        this.image = image;
++        this.image = Image;
+         Describe = describe;
+         this.price = price;
+         this.status = status;
+         this.isFavorite = isFavorite;
+-        this.id_Category = id_Category;
++        this.product = product;
++        this.createdAt = createdAt;
++        this.updateAt = updateAt;
++        this.quantity = quantity;
+     }
+ 
+     public Product() {
+     }
+ 
+-    public Product(String id, String name, int image, String describe, Double price,int id_Category) {
+-        this.id = id;
+-        this.name = name;
+-        this.image = image;
+-        Describe = describe;
+-        this.price = price;
+-        this.id_Category = id_Category;
+-    }
+-
+     public String getId() {
+-        return id;
++        return _id;
+     }
+ 
+     public void setId(String id) {
+-        this.id = id;
++        this._id = id;
+     }
+ 
+     public String getName() {
+@@ -50,11 +53,13 @@
+         this.name = name;
+     }
+ 
+-    public int getImage() {
++    public ArrayList<String> getImage() {
+         return image;
+     }
+ 
+-    public void setImage(int image) {
++
++
++    public void setImage(ArrayList<String> image) {
+         this.image = image;
+     }
+ 
+@@ -66,19 +71,19 @@
+         Describe = describe;
+     }
+ 
+-    public Double getPrice() {
++    public String getPrice() {
+         return price;
+     }
+ 
+-    public void setPrice(Double price) {
++    public void setPrice(String price) {
+         this.price = price;
+     }
+ 
+-    public int getStatus() {
++    public String getStatus() {
+         return status;
+     }
+ 
+-    public void setStatus(int status) {
++    public void setStatus(String status) {
+         this.status = status;
+     }
+ 
+@@ -90,11 +95,27 @@
+         isFavorite = favorite;
+     }
+ 
+-    public int getId_Category() {
+-        return id_Category;
++    public Product getProduct() {
++        return product;
++    }
++
++    public void setProduct(Product product) {
++        this.product = product;
++    }
++
++    public String getCreatedAt() {
++        return createdAt;
++    }
++
++    public void setCreatedAt(String createdAt) {
++        this.createdAt = createdAt;
++    }
++
++    public String getUpdateAt() {
++        return updateAt;
+     }
+ 
+-    public void setId_Category(int id_Category) {
+-        this.id_Category = id_Category;
++    public void setUpdateAt(String updateAt) {
++        this.updateAt = updateAt;
+     }
+ }
+Index: app/src/main/java/com/example/sweethub/Model/Response.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/Model/Response.java b/app/src/main/java/com/example/sweethub/Model/Response.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/Model/Response.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,41 @@
++package com.example.sweethub.Model;
++
++public class Response <T>{
++
++    private int status;
++    private String messenger;
++    private T data;
++
++    public Response(int status, String messenger, T data) {
++        this.status = status;
++        this.messenger = messenger;
++        this.data = data;
++    }
++
++    public Response() {
++    }
++
++    public int getStatus() {
++        return status;
++    }
++
++    public void setStatus(int status) {
++        this.status = status;
++    }
++
++    public String getMessenger() {
++        return messenger;
++    }
++
++    public void setMessenger(String messenger) {
++        this.messenger = messenger;
++    }
++
++    public T getData() {
++        return data;
++    }
++
++    public void setData(T data) {
++        this.data = data;
++    }
++}
+Index: app/src/main/java/com/example/sweethub/servers/ApiServices.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/servers/ApiServices.java b/app/src/main/java/com/example/sweethub/servers/ApiServices.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/servers/ApiServices.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,56 @@
++package com.example.sweethub.servers;
++
++
++import com.example.sweethub.Model.Category;
++import com.example.sweethub.Model.Product;
++import com.example.sweethub.Model.Response;
++
++import java.util.ArrayList;
++import java.util.Map;
++
++import okhttp3.MultipartBody;
++import okhttp3.RequestBody;
++import retrofit2.Call;
++import retrofit2.http.Body;
++import retrofit2.http.DELETE;
++import retrofit2.http.GET;
++import retrofit2.http.Header;
++import retrofit2.http.Multipart;
++import retrofit2.http.POST;
++import retrofit2.http.PUT;
++import retrofit2.http.Part;
++import retrofit2.http.PartMap;
++import retrofit2.http.Path;
++import retrofit2.http.Query;
++
++public interface ApiServices {
++    public static String BASE_URL = "http://192.168.0.100:3000/api/";
++
++    @GET("getListCategory")
++    Call<Response<ArrayList<Category>>> getListCategory();
++
++    @GET("search-distributor")
++    Call<Response<ArrayList<Category>>> searchDistributor(@Query("key") String key);
++
++    @POST("add_distributor")
++    Call<Response<ArrayList<Category>>> addDistributor(@Body Category category);
++
++
++    @PUT("updateDistributorById/{id}")
++    Call<Response<ArrayList<Category>>> updateDistributor(@Path("id") String id, @Body Category category);
++
++    @DELETE("destroyDistributorById/{id}")
++    Call<Response<ArrayList<Category>>> deleteDistributor(@Path("id") String id);
++
++    @GET("get_list_product")
++    Call<Response<ArrayList<Product>>> getListFruit(@Header("Authorization") String token);
++
++    @Multipart
++    @POST("ProductWithImage")
++    Call<Response<Product>> addProductWithFileImage(@PartMap Map<String, RequestBody> requestBodyMap,
++                                                @Part ArrayList<MultipartBody.Part> ds_hinh
++    );
++
++}
++
++
+Index: app/src/main/java/com/example/sweethub/servers/HttpRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/sweethub/servers/HttpRequest.java b/app/src/main/java/com/example/sweethub/servers/HttpRequest.java
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/java/com/example/sweethub/servers/HttpRequest.java	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,21 @@
++package com.example.sweethub.servers;
++
++
++import static com.example.sweethub.servers.ApiServices.BASE_URL;
++
++import retrofit2.Retrofit;
++import retrofit2.converter.gson.GsonConverterFactory;
++
++public class HttpRequest {
++    private ApiServices requestInterface;
++
++    public HttpRequest() {
++        requestInterface = new Retrofit.Builder()
++                .baseUrl(BASE_URL)
++                .addConverterFactory(GsonConverterFactory.create())
++                .build().create(ApiServices.class);
++    }
++    public ApiServices callAPI() {
++        return requestInterface;
++    }
++}
+Index: app/src/main/res/drawable/baseline_broken_image_24.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/baseline_broken_image_24.xml b/app/src/main/res/drawable/baseline_broken_image_24.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/drawable/baseline_broken_image_24.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,5 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="200dp" android:tint="#000000" android:viewportHeight="24" android:viewportWidth="24" android:width="200dp">
++      
++    <path android:fillColor="@android:color/white" android:pathData="M21,5v6.59l-3,-3.01 -4,4.01 -4,-4 -4,4 -3,-3.01L3,5c0,-1.1 0.9,-2 2,-2h14c1.1,0 2,0.9 2,2zM18,11.42l3,3.01L21,19c0,1.1 -0.9,2 -2,2L5,21c-1.1,0 -2,-0.9 -2,-2v-6.58l3,2.99 4,-4 4,4 4,-3.99z"/>
++    
++</vector>
+Index: app/src/main/res/drawable/baseline_image_24.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/baseline_image_24.xml b/app/src/main/res/drawable/baseline_image_24.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/drawable/baseline_image_24.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,5 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:tint="#000000" android:viewportHeight="24" android:viewportWidth="24" android:width="24dp">
++      
++    <path android:fillColor="@android:color/white" android:pathData="M21,19V5c0,-1.1 -0.9,-2 -2,-2H5c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h14c1.1,0 2,-0.9 2,-2zM8.5,13.5l2.5,3.01L14.5,12l4.5,6H5l3.5,-4.5z"/>
++    
++</vector>
+Index: app/src/main/res/layout/activity_add_product.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_add_product.xml b/app/src/main/res/layout/activity_add_product.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/layout/activity_add_product.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,174 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:id="@+id/main"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:orientation="vertical"
++    tools:context=".AddProductActivity">
++
++
++    <ScrollView
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        >
++
++        <LinearLayout
++            android:padding="10dp"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="vertical">
++
++            <!-- Thanh tiêu đề -->
++            <TextView
++                android:id="@+id/tvTitle"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:background="#6200EE"
++                android:padding="16dp"
++                android:text="Add Product"
++                android:textColor="#FFFFFF"
++                android:textSize="20sp"
++                android:textStyle="bold" />
++
++            <!-- Hình ảnh -->
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:layout_margin="10dp"
++                android:orientation="horizontal">
++
++                <ScrollView
++                    android:layout_width="300dp"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:orientation="horizontal">
++
++                    <LinearLayout
++                        android:id="@+id/imageContainer"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:orientation="horizontal" />
++                </ScrollView>
++
++                <ImageView
++                    android:id="@+id/ivChoseImage"
++                    android:layout_width="50dp"
++                    android:layout_height="120dp"
++                    android:layout_weight="1"
++                    android:src="@drawable/baseline_image_24"
++                    android:contentDescription="Image Placeholder" />
++            </LinearLayout>
++
++            <!-- Tên -->
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Name:"
++                android:textSize="16sp"
++                android:layout_marginTop="16dp" />
++
++            <EditText
++                android:id="@+id/etName"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:hint="Enter name"
++                android:background="@android:drawable/edit_text" />
++
++            <!-- Số lượng -->
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Price:"
++                android:textSize="16sp"
++                android:layout_marginTop="16dp" />
++
++            <EditText
++                android:id="@+id/etPrice"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:inputType="number"
++                android:hint="Enter price"
++                android:background="@android:drawable/edit_text" />
++
++            <!-- Mô tả -->
++
++
++            <!-- Giá -->
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Quantity:"
++                android:textSize="16sp"
++                android:layout_marginTop="16dp" />
++
++            <EditText
++                android:id="@+id/etQuantity"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:inputType="numberDecimal"
++                android:hint="Enter quantity"
++                android:background="@android:drawable/edit_text" />
++
++            <!-- Trạng thái -->
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Describe:"
++                android:textSize="16sp"
++                android:layout_marginTop="16dp" />
++
++            <!-- Danh sách công ty -->
++            <EditText
++                android:id="@+id/etDescribe"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:background="@android:drawable/edit_text"
++                android:hint="Enter Describe" />
++
++            <TextView
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:text="Status:"
++                android:textSize="16sp"
++                android:layout_marginTop="16dp" />
++
++            <!-- Danh sách công ty -->
++            <EditText
++                android:id="@+id/etStatus"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:background="@android:drawable/edit_text"
++                android:hint="Enter Describe" />
++
++            <Spinner
++                android:id="@+id/spinnerCompany"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:layout_marginTop="16dp" />
++
++
++
++            <!-- Nút thêm -->
++            <Button
++                android:id="@+id/btnAdd"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:text="THÊM"
++                android:backgroundTint="#FFA500"
++                android:textColor="#FFFFFF"
++                android:layout_marginTop="16dp" />
++
++            <Button
++                android:id="@+id/btnBack"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:text="BACK"
++                android:backgroundTint="#53504A"
++                android:textColor="#FFFFFF"
++                android:layout_marginTop="16dp" />
++        </LinearLayout>
++    </ScrollView>
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/fragment_home.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_home.xml b/app/src/main/res/layout/fragment_home.xml
+--- a/app/src/main/res/layout/fragment_home.xml	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/res/layout/fragment_home.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -1,6 +1,7 @@
+-<androidx.core.widget.NestedScrollView
+-    android:layout_width="match_parent"
++<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+     android:layout_height="match_parent"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
+     android:fillViewport="true"
+     xmlns:android="http://schemas.android.com/apk/res/android">
+ 
+@@ -63,59 +64,23 @@
+             android:textStyle="bold"
+             android:layout_marginTop="16dp"/>
+ 
+-        <HorizontalScrollView
+-            android:id="@+id/hsCategories"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:layout_marginTop="8dp"
+-            android:layout_marginBottom="16dp">
++       <androidx.recyclerview.widget.RecyclerView
++           android:id="@+id/rycCategory"
++           android:layout_width="match_parent"
++           android:layout_height="wrap_content"
++           android:layout_marginTop="8dp"
++           android:layout_marginBottom="16dp"
++            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
++           android:orientation="horizontal"
+ 
+-            <LinearLayout
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:orientation="horizontal">
+-
+-                <Button
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:text="Cake"
+-                    android:id="@+id/btnCake"
+-                    android:backgroundTint="#FFCDD2"
+-                    android:layout_margin="8dp" />
+-
+-                <Button
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:text="Donuts"
+-                    android:id="@+id/btnDonuts"
+-                    android:backgroundTint="#E0E0E0"
+-                    android:layout_margin="8dp" />
+-
+-                <Button
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:text="Cookies"
+-                    android:id="@+id/btnCookies"
+-                    android:backgroundTint="#E0E0E0"
+-                    android:layout_margin="8dp" />
+-
+-                <Button
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:text="Ice Cream"
+-                    android:id="@+id/btnIceCream"
+-                    android:backgroundTint="#E0E0E0"
+-                    android:layout_margin="8dp" />
+-
+-                <Button
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:text="Bread"
+-                    android:id="@+id/btn_bread"
+-                    android:backgroundTint="#E0E0E0"
+-                    android:layout_margin="8dp" />
+-            </LinearLayout>
+-        </HorizontalScrollView>
++           />
++
++        <com.google.android.material.floatingactionbutton.FloatingActionButton
++            android:id="@+id/btnAdd"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_gravity="end"
++            android:layout_margin="10dp"/>
+ 
+         <!-- RecyclerView for Products -->
+         <androidx.recyclerview.widget.RecyclerView
+@@ -125,17 +90,11 @@
+             android:layout_marginTop="8dp"
+             android:layout_marginBottom="16dp"
+             android:orientation="horizontal"
++            android:padding="10dp"
+             android:layout_weight="1"/>
+ 
+         <!-- Bottom Navigation -->
+ 
+-        <androidx.core.widget.NestedScrollView
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:fillViewport="true">
+-
+-
+-        </androidx.core.widget.NestedScrollView>
+     </LinearLayout>
+ 
+ 
+Index: app/src/main/res/layout/fragment_test.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_test.xml b/app/src/main/res/layout/fragment_test.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/layout/fragment_test.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,39 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:orientation="vertical"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent">
++
++    <TextView
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:text="Danh Sách Fruit"
++        android:gravity="center"
++        android:textSize="23dp"
++        android:textStyle="bold"/>
++
++    <RelativeLayout
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        >
++
++
++        <androidx.recyclerview.widget.RecyclerView
++            android:id="@+id/rycCategory"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:orientation="vertical"
++            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
++
++        <com.google.android.material.floatingactionbutton.FloatingActionButton
++            android:id="@+id/btnAdd"
++            android:layout_width="wrap_content"
++            android:layout_height="wrap_content"
++            android:layout_alignParentBottom="true"
++            android:layout_alignParentEnd="true"
++            android:src="@drawable/ic_add"
++            android:layout_margin="20dp"/>
++    </RelativeLayout>
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/item_category.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item_category.xml b/app/src/main/res/layout/item_category.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/layout/item_category.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,31 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="wrap_content"
++    android:layout_height="wrap_content"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    android:orientation="vertical"
++    android:layout_margin="8dp">
++
++    <!-- CardView cho mỗi mục -->
++    <androidx.cardview.widget.CardView
++        android:layout_width="100dp"
++        android:layout_height="40dp"
++        android:layout_margin="4dp"
++        app:cardCornerRadius="25dp"
++        android:background="@color/white"
++        app:cardElevation="4dp">
++
++        <!-- TextView bên trong CardView -->
++        <TextView
++            android:id="@+id/tvCategoryName"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:gravity="center"
++            android:text="Cake"
++            android:textColor="@color/black"
++            android:textStyle="bold"
++            android:background="#F48FB1"
++            android:textSize="14sp" />
++    </androidx.cardview.widget.CardView>
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/item_image.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item_image.xml b/app/src/main/res/layout/item_image.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/layout/item_image.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="wrap_content"
++    android:layout_height="wrap_content"
++    android:layout_marginRight="10dp"
++    >
++    <ImageView
++        android:id="@+id/img"
++        android:layout_width="100dp"
++        android:layout_height="100dp"
++        />
++
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/item_product.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/item_product.xml b/app/src/main/res/layout/item_product.xml
+--- a/app/src/main/res/layout/item_product.xml	(revision 3e8cf2a7ed7782aa5e2f00b4c0fa2a4c28c7590f)
++++ b/app/src/main/res/layout/item_product.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -3,8 +3,10 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+-    android:layout_margin="8dp"
++    android:layout_marginRight="15dp"
++    android:layout_marginBottom="15dp"
+     app:cardCornerRadius="16dp"
++
+     app:cardElevation="4dp">
+ 
+     <LinearLayout
+@@ -16,7 +18,7 @@
+         <!-- Product Image -->
+         <ImageView
+             android:id="@+id/ivProductImage"
+-            android:layout_width="150dp"
++            android:layout_width="140dp"
+             android:layout_height="139dp"
+             android:scaleType="centerCrop"
+             android:src="@drawable/cake" />
+Index: app/src/main/res/xml/network_security_config.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/xml/network_security_config.xml b/app/src/main/res/xml/network_security_config.xml
+new file mode 100644
+--- /dev/null	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
++++ b/app/src/main/res/xml/network_security_config.xml	(revision 655006a0d5cb640c41b162dc8e52767b7c42791b)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<network-security-config>
++    <domain-config cleartextTrafficPermitted="true">
++        <domain includeSubdomains="true">192.168.0.100</domain>
++    </domain-config>
++</network-security-config>
+\ No newline at end of file
