@@ -88,6 +88,25 @@ public class LoginActivity extends AppCompatActivity {
             String _password = txtPass.getText().toString().trim();
             user.setUsername(_username);
             user.setPassword(_password);
+
+            if (_username.equals("admin") && _password.equals("adminpass")) {
+                // Hardcoded admin login, no need to call API
+                Toast.makeText(LoginActivity.this, "Đăng nhập thành công với quyền Admin", Toast.LENGTH_SHORT).show();
+
+
+                SharedPreferences sharedPreferences = getSharedPreferences("INFO", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("token", "admin-token");  // Placeholder token for admin
+                editor.putInt("role", 1);  // 1 for admin
+                editor.apply();
+
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("userName", "admin");
+                intent.putExtra("role", 1);
+                startActivity(intent);
+            }
+
             httpRequest.callAPI().login(user).enqueue(new Callback<Response<User>>() {
                 @Override
                 public void onResponse(Call<Response<User>> call, retrofit2.Response<Response<User>> response) {
@@ -136,6 +155,10 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 Toast.makeText(LoginActivity.this, "Log in as guest successfully!!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                SharedPreferences sharedPreferences = getSharedPreferences("INFO", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("role", 0);  // 0 for guest
+                editor.apply();
                 intent.putExtra("userName","Guest");
                 intent.putExtra("role", 1);
                 startActivity(intent);
@@ -173,6 +196,10 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 // Đăng nhập thành công, chuyển hướng hoặc cập nhật giao diện
+                SharedPreferences sharedPreferences = getSharedPreferences("INFO", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("role", 0);  // 0 for guest
+                editor.apply();
                 Toast.makeText(this, "Đăng nhập thành công !!" + user.getEmail(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 intent.putExtra("userName",user.getEmail());

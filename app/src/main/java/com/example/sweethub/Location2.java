@@ -106,6 +106,21 @@ public class Location2 extends AppCompatActivity {
         btn_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String phoneNumber = edt_phone.getText().toString();
+                String location = edt_location.getText().toString();
+
+                if (phoneNumber.equals("") || location.equals("")) {
+                    if(phoneNumber.equals("")) {
+                        edt_phone.setError("Vui lòng nhập số điện thoại");
+                    }
+                    if(location.equals("")) {
+                        edt_location.setError("Vui lòng nhập địa chỉ");
+                    }
+                } else if (!phoneNumber.matches("^(0|\\+84)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-9]|9[0-9])\\d{7}$")){
+                    edt_phone.setError("Số điện thọoại không hợp lệ");
+                } else if(!location.matches("^[a-zA-Z0-9À-ỹ\\s,./-]+$")) {
+                    edt_location.setError("Địa chỉ không hợp lệ");
+                }
                 if (WardCode.equals("")) return;
                 Log.d("ccccc", "onClick: " + WardCode);
                 Log.d("bbbbb", "Thành Công !!");

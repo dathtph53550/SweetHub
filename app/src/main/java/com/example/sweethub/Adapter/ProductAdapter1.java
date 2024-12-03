@@ -2,6 +2,7 @@ package com.example.sweethub.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +93,15 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                 notifyDataSetChanged();
             }
         });
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("INFO", Context.MODE_PRIVATE);
+        int role = sharedPreferences.getInt("role", -1);
+
+        if (role == 0) {
+            holder.ivEdit.setVisibility(View.GONE);
+        } else {
+            holder.ivEdit.setVisibility(View.VISIBLE);
+        }
 
 
         holder.btnAddProduct.setOnClickListener(new View.OnClickListener() {

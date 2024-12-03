@@ -110,6 +110,15 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
         tvGreeting.setText("Hi, "+ data);
 
 //        Intent intent = new Intent(getActivity(), AddProductActivity.class);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("INFO", Context.MODE_PRIVATE);
+        int role = sharedPreferences.getInt("role", -1);
+
+        // Hide FloatingActionButton for guests (role == 0)
+        if (role == 0) {
+            btnAdd.setVisibility(View.GONE);
+        } else {
+            btnAdd.setVisibility(View.VISIBLE);
+        }
 
 
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -259,8 +268,8 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     private void setupSlideshow() {
         List<Integer> images = new ArrayList<>();
         images.add(R.drawable.cake_banner); // Correct usage of resource ID
-        images.add(R.drawable.cake_banner);
-        images.add(R.drawable.cake_banner);
+        images.add(R.drawable.banner2);
+        images.add(R.drawable.banner3);
 
         SlideshowAdapter slideshowAdapter = new SlideshowAdapter(images);
         viewPagerSlideshow.setAdapter(slideshowAdapter);
