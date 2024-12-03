@@ -170,8 +170,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
             }
         });
 
-
-
     }
 
     @Override

@@ -186,6 +186,8 @@ public class Location2 extends AppCompatActivity {
                     Order order = new Order();
                     order.setOrder_code(response.body().getData().getOrder_code());
                     order.setId_user(getSharedPreferences("INFO",MODE_PRIVATE).getString("id",""));
+
+
                     httpRequest.callAPI().order(order).enqueue(new Callback<com.example.sweethub.Model.Response<ArrayList<Category>>>() {
                         @Override
                         public void onResponse(Call<com.example.sweethub.Model.Response<ArrayList<Category>>> call, Response<com.example.sweethub.Model.Response<ArrayList<Category>>> response) {
@@ -233,6 +235,10 @@ public class Location2 extends AppCompatActivity {
 
         }
     };
+
+
+
+
 
     Callback<ResponseGHN<ArrayList<Province>>> responseProvince = new Callback<ResponseGHN<ArrayList<Province>>>() {
         @Override

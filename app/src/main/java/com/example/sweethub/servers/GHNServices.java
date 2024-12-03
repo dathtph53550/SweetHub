@@ -10,8 +10,11 @@ import com.example.sweethub.Models.SendOrderRequest;
 import com.example.sweethub.Models.Ward;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -32,5 +35,10 @@ public interface GHNServices {
 
     @POST("shiip/public-api/v2/shipping-order/create")
     Call<ResponseGHN<GHNOrderRespone>> GHNOrder(@Body SendOrderRequest sendOrderRequest);
+
+    @POST("shiip/public-api/v2/shipping-order/detail")
+    Call<ResponseGHN<GHNOrderRespone>> detailOderCode(@Body Map<String, String> body);
+
+
 
 }
