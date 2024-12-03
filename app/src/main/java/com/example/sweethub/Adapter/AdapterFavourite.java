@@ -54,12 +54,15 @@ public class AdapterFavourite extends RecyclerView.Adapter<AdapterFavourite.Favo
     public void onBindViewHolder(@NonNull FavouriteHolder holder, int position) {
         httpRequest = new HttpRequest();
         Product product = list.get(position);
+        Category category = product.getId_category();
         holder.tvName.setText(product.getName());
+
+        Log.d("ddddddddd", "onBindViewHolder: "+ category.getName()) ;
 
         Log.d("bbbbbbb", "onBindViewHolder: " +product.getName() + "--" + product.getImage().get(0));
 //        holder.tvCategory.setText(product.getCategory().getId());
 
-        holder.tvCategory.setText(product.getDescribe());
+        holder.tvCategory.setText(category.getName());
 //        Log.d("zzzz", "onBindViewHolder: " + product.getCategory().getId());
 
         Glide.with(context)

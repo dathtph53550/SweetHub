@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.ProductHolder> {
+public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.ProductHolder>{
 
     Context context;
     ArrayList<Product> list;
@@ -66,6 +66,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
             Toast.makeText(context, "Image null", Toast.LENGTH_SHORT).show();
             return;
         }
+//        Log.d("eeeeeee", "onBindViewHolder: " + product.get);
         Log.d("image", "onBindViewHolder: " + product.getImage().get(0));
         Log.d("favourite", "onBindViewHolder: " + product.getFavorite());
         if (product.getFavorite()) {
@@ -176,8 +177,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
     public int getItemCount() {
         return list.size();
     }
-
-
 
 
 

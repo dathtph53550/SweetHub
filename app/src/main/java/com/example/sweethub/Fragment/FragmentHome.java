@@ -57,7 +57,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick{
+public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick,CategoryAdapter.CateClick{
     FirebaseFirestore db;
     private EditText etSearch;
     private ViewPager2 viewPagerSlideshow;
@@ -102,7 +102,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
         //getListCategory nhe
         rycCategory = view.findViewById(R.id.rycCategory);
         listCate = new ArrayList<>();
-        adapterCate = new CategoryAdapter(getContext(),listCate);
+        adapterCate = new CategoryAdapter(getContext(),listCate,this);
         rycCategory.setAdapter(adapterCate);
         etSearch = view.findViewById(R.id.etSearch);
         tvGreeting = view.findViewById(R.id.tvGreeting);
@@ -149,7 +149,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
                 if(response.isSuccessful()){
                     if(response.body().getStatus() == 200){
                         listCate = response.body().getData();
-                        adapterCate = new CategoryAdapter(getContext(),listCate);
+                        adapterCate = new CategoryAdapter(getContext(),listCate,FragmentHome.this);
                         rycCategory.setAdapter(adapterCate);
                         adapterCate.notifyDataSetChanged();
                         Log.d("zzzz", "onResponse: " + listCate.size());
@@ -393,4 +393,33 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
                 }
             }
     );
+
+    @Override
+    public void data(Category category) {
+        httpRequest.callAPI().getProductsByCategory(category.getId()).enqueue(new Callback<Response<ArrayList<Product>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<Product>>> call, retrofit2.Response<Response<ArrayList<Product>>> response) {
+                if(response.isSuccessful()){
+                    if(response.body().getStatus() == 200){
+                        listProduct.clear();
+                        listProduct = response.body().getData();
+                        adapterProduct = new ProductAdapter1(getContext(),listProduct,FragmentHome.this);
+                        rvProducts.setAdapter(adapterProduct);
+                        Log.d("fffff", "onResponse: " + listProduct.size());
+                        adapterProduct.notifyDataSetChanged();
+                    }
+                }
+                else {
+                    listProduct.clear();
+                    adapterProduct.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<Product>>> call, Throwable t) {
+
+            }
+        });
+
+    }
 }

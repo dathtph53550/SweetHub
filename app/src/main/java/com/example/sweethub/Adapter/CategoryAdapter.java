@@ -27,10 +27,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     Context context;
     ArrayList<Category> list;
     HttpRequest httpRequest;
+    CateClick cateClick;
 
-    public CategoryAdapter(Context context, ArrayList<Category> list) {
+    public CategoryAdapter(Context context, ArrayList<Category> list, CateClick cateClick) {
         this.context = context;
         this.list = list;
+        this.cateClick = cateClick;
     }
 
 
@@ -53,9 +55,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                cateClick.data(category);
             }
         });
+    }
+
+    public interface CateClick {
+        void data(Category category);
+
     }
 
     @Override

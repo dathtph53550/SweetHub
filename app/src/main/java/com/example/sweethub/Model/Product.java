@@ -16,8 +16,8 @@ public class Product implements Serializable {
     private String quantity;
     private Boolean isFavorite;
 
-    @SerializedName("_id_category")
-    private Category category;
+//    @SerializedName("_id_category")
+    private Category id_category;
     private Product product;
     private String createdAt,updateAt;
 
@@ -136,11 +136,11 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
-    public Category getCategory() {
-        return category;
+    public Category getId_category() {
+        return id_category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setId_category(Category id_category) {
+        this.id_category = id_category;
     }
 }
