@@ -11,7 +11,7 @@ public class HttpRequest {
 
     public HttpRequest() {
         requestInterface = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BASE_URL())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(ApiServices.class);
     }

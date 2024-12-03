@@ -18,6 +18,7 @@ import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
 import com.example.sweethub.R;
+import com.example.sweethub.servers.ApiServices;
 import com.example.sweethub.servers.HttpRequest;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
             holder.ivFavourite.setImageResource(R.drawable.heart); // Hình trái tim trống
         }
         String url = product.getImage().get(0);
-        String newUrl = url.replace("localhost", "192.168.88.180");
+        String newUrl = url.replace("localhost", ApiServices.IPv4);
         Glide.with(context)
                 .load(newUrl)
                 .thumbnail(Glide.with(context)

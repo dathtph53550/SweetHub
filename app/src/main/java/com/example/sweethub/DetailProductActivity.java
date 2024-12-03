@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
+import com.example.sweethub.servers.ApiServices;
 import com.example.sweethub.servers.HttpRequest;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class DetailProductActivity extends AppCompatActivity {
 
 
         String url = product.getImage().get(0);
-        String newUrl = url.replace("localhost", "192.168.0.100");
+        String newUrl = url.replace("localhost", ApiServices.IPv4);
         Glide.with(this)
                 .load(newUrl) // URL hoặc đường dẫn ảnh
                 .override(200, 350) // Điều chỉnh kích thước

@@ -16,6 +16,7 @@ import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
 import com.example.sweethub.R;
+import com.example.sweethub.servers.ApiServices;
 import com.example.sweethub.servers.HttpRequest;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class AdapterFavourite extends RecyclerView.Adapter<AdapterFavourite.Favo
 //        Log.d("zzzz", "onBindViewHolder: " + product.getCategory().getId());
 
         Glide.with(context)
-                .load(product.getImage().get(0).replace("localhost", "192.168.88.180"))
+                .load(product.getImage().get(0).replace("localhost", ApiServices.IPv4))
                 .thumbnail(Glide.with(context)
                         .load(R.drawable.baseline_broken_image_24))
                 .into(holder.imgFavorite);

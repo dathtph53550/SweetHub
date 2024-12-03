@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.sweethub.Fragment.CartItem;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.R;
+import com.example.sweethub.servers.ApiServices;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class AdapterCard extends RecyclerView.Adapter<AdapterCard.CardHolder> {
 
 
         String url = item.getProduct().getImage().get(0);
-        String newUrl = url.replace("localhost", "192.168.88.180");
+        String newUrl = url.replace("localhost", ApiServices.IPv4);
         Glide.with(context)
                 .load(newUrl)
                 .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))
