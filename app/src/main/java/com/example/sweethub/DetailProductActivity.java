@@ -72,8 +72,11 @@ public class DetailProductActivity extends AppCompatActivity {
 
         Log.d("zzzz", "onCreate: " + product.getImage());
 
+
+        String url = product.getImage().get(0);
+        String newUrl = url.replace("localhost", "192.168.0.100");
         Glide.with(this)
-                .load(product.getImage().get(0)) // URL hoặc đường dẫn ảnh
+                .load(newUrl) // URL hoặc đường dẫn ảnh
                 .override(200, 350) // Điều chỉnh kích thước
                 .centerCrop()
                 .placeholder(R.drawable.baseline_broken_image_24) // Ảnh mặc định khi đang tải

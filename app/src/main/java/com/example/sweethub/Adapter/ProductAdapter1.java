@@ -80,8 +80,8 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                 .thumbnail(Glide.with(context)
                         .load(R.drawable.baseline_broken_image_24))
                 .into(holder.ivProductImage);
-        Log.d("urlll", "onBindViewHolder: " + url);
-        Log.d("urlll", "onBindViewHolder: " + newUrl);
+        Log.d("urllliiiii", "onBindViewHolder: " + url);
+//        Log.d("urlll", "onBindViewHolder: " + newUrl);
 
         holder.ivEdit.setOnClickListener(new View.OnClickListener() {
             @Override
