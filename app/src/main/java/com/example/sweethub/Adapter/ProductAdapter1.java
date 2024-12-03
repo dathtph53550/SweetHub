@@ -75,7 +75,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
             holder.ivFavourite.setImageResource(R.drawable.heart); // Hình trái tim trống
         }
         String url = product.getImage().get(0);
-        String newUrl = url.replace("localhost", "192.168.0.100");
+        String newUrl = url.replace("localhost", "192.168.88.180");
         Glide.with(context)
                 .load(newUrl)
                 .thumbnail(Glide.with(context)

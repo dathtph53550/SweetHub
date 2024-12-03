@@ -66,7 +66,7 @@ public class AdapterFavourite extends RecyclerView.Adapter<AdapterFavourite.Favo
 //        Log.d("zzzz", "onBindViewHolder: " + product.getCategory().getId());
 
         Glide.with(context)
-                .load(product.getImage().get(0).replace("localhost", "192.168.0.100"))
+                .load(product.getImage().get(0).replace("localhost", "192.168.88.180"))
                 .thumbnail(Glide.with(context)
                         .load(R.drawable.baseline_broken_image_24))
                 .into(holder.imgFavorite);

@@ -28,7 +28,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
     @Override
     public void onBindViewHolder(@NonNull ImageHolder holder, int position) {
         String url = list.get(position);
-        String newUrl = url.replace("localhost", "192.168.0.100");
+        String newUrl = url.replace("localhost", "192.168.88.180");
         Glide.with(context)
                 .load(newUrl)
                 .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))

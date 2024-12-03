@@ -36,6 +36,18 @@
             android:name=".Splash_ScreenActivity"
             android:exported="false" />
 
+
+        <activity
+            android:name=".FeedBackActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrderHistoryActivity"
+            android:exported="false" />
+
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -49,6 +61,13 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
+
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

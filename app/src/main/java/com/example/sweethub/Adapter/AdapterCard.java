@@ -46,7 +46,7 @@ public class AdapterCard extends RecyclerView.Adapter<AdapterCard.CardHolder> {
 
 
         String url = item.getProduct().getImage().get(0);
-        String newUrl = url.replace("localhost", "192.168.0.100");
+        String newUrl = url.replace("localhost", "192.168.88.180");
         Glide.with(context)
                 .load(newUrl)
                 .thumbnail(Glide.with(context).load(R.drawable.baseline_broken_image_24))

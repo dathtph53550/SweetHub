@@ -26,7 +26,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiServices {
-    public static String BASE_URL = "http://192.168.0.100:3000/api/";
+    public static String BASE_URL = "http://192.168.88.180:3000/api/";
 
     @GET("getListCategory")
     Call<Response<ArrayList<Category>>> getListCategory();
