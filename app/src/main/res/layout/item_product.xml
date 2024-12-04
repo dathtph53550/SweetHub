@@ -85,11 +85,11 @@
             <ImageButton
                 android:id="@+id/btnAddProduct"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/add_button_background"
+                android:contentDescription="Add Product"
                 android:padding="8dp"
-                android:src="@drawable/ic_add"
-                android:contentDescription="Add Product" />
+                android:src="@drawable/ic_add" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

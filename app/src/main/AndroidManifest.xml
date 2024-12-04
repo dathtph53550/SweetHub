@@ -9,7 +9,6 @@
     <uses-permission
         android:name="android.permission.INTERNET"
         tools:ignore="ManifestOrder" />
-
     <uses-permission
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
@@ -25,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".CheckOutActivity"
+            android:exported="false" />
+        <activity
             android:name=".Location2"
             android:exported="false" />
         <activity
@@ -39,8 +41,6 @@
         <activity
             android:name=".Splash_ScreenActivity"
             android:exported="false" />
-
-
         <activity
             android:name=".FeedBackActivity"
             android:exported="false" />
@@ -50,7 +50,6 @@
         <activity
             android:name=".OrderHistoryActivity"
             android:exported="false" />
-
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -65,8 +64,6 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-
-
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

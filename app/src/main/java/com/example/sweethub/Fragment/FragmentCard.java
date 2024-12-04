@@ -14,17 +14,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sweethub.Adapter.AdapterCard;
+import com.example.sweethub.Model.Cart;
+import com.example.sweethub.Model.Response;
 import com.example.sweethub.R;
+import com.example.sweethub.servers.HttpRequest;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class FragmentCard extends Fragment implements AdapterCard.CartUpdateListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+
+public class FragmentCard extends Fragment {
 
     RecyclerView recyclerViewCart;
     TextView totall;
     Button checkOut;
-    ArrayList<CartItem> cartItems = new ArrayList<>();
-    AdapterCard adapterCard;
+    AdapterCard adapter;
+    ArrayList<Cart> list;
+    HttpRequest httpRequest;
+
 
     @Nullable
     @Override
@@ -36,20 +45,41 @@ public class FragmentCard extends Fragment implements AdapterCard.CartUpdateList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerViewCart = view.findViewById(R.id.recyclerViewCart);
+        httpRequest = new HttpRequest();
+        list = new ArrayList<>();
+        adapter = new AdapterCard(getContext(),list);
         totall = view.findViewById(R.id.cartTotalText);
         checkOut = view.findViewById(R.id.checkOutButton);
-        Log.d("zzzzz", "onViewCreated: " + cartItems.size());
-        adapterCard = new AdapterCard(getContext(), cartItems, this);
-        recyclerViewCart.setAdapter(adapterCard);
+        recyclerViewCart.setAdapter(adapter);
 
+        httpRequest.callAPI().getListCart().enqueue(new Callback<Response<ArrayList<Cart>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<Cart>>> call, retrofit2.Response<Response<ArrayList<Cart>>> response) {
+                list.clear();
+                list.addAll(response.body().getData());
+                Log.d("pppppp", "onResponse: " + list.size());
+                // Tính tổng giá trị
+                double totalPrice = 0.0;
+                for (Cart cart : list) {
+                    try {
+                        // Nếu giá trị là String, cần chuyển đổi sang double
+                        totalPrice += Double.parseDouble(cart.getPrice()) * Integer.parseInt(cart.getQuantity());
+                    } catch (NumberFormatException e) {
+                        Log.e("TotalError", "Invalid price or quantity: " + e.getMessage());
+                    }
+                }
+
+                // Cập nhật TextView
+                totall.setText("Total: " + totalPrice + " đ");
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<Cart>>> call, Throwable t) {
+                Log.d("ppppp", "onFailure: " + t.getMessage());
+            }
+        });
     }
 
-    @Override
-    public void onCartUpdated() {
-        int total = 0;
-        for (CartItem item : cartItems) {
-            total += Integer.parseInt(item.getProduct().getPrice()) * item.getQuantity();
-        }
-        totall.setText("Total: " + total + " đ");
-    }
+
 }

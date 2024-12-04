@@ -1,6 +1,7 @@
 package com.example.sweethub.servers;
 
 
+import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
@@ -97,6 +98,25 @@ public interface ApiServices {
 
     @GET("getListProductByFavourite")
     Call<Response<ArrayList<Product>>> getListProductByFavourite();
+
+    @GET("get-list-order")
+    Call<Response<ArrayList<Order>>> getListOrder();
+
+    @GET("getListCart")
+    Call<Response<ArrayList<Cart>>> getListCart();
+
+    @POST("addCart")
+    Call<Response<Cart>> addCart(@Body Cart cart);
+
+    @PUT("increaseQuantity/{id}")
+    Call<Response<ArrayList<Cart>>> increaseQuantity(@Path("id") String productId);
+
+    // Gọi API để giảm số lượng sản phẩm
+    @PUT("decreaseQuantity/{id}")
+    Call<Response<ArrayList<Cart>>>  decreaseQuantity(@Path("id") String productId);
+
+    @DELETE("deleteCart/{id}")
+    Call<Response<ArrayList<Cart>>> deleteCart(@Path("id") String id);
 
 }
 

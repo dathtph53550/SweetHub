@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sweethub.Adapter.OrderAdapter;
+import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Models.District;
 import com.example.sweethub.Models.GHNOrderRespone;
 import com.example.sweethub.Models.Order;
 import com.example.sweethub.Models.ResponseGHN;
 import com.example.sweethub.servers.GHNRequest;
+import com.example.sweethub.servers.HttpRequest;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -36,13 +38,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class OrderHistoryActivity extends AppCompatActivity {
 
 
     public static final MediaType JSON = MediaType.get("application/json");
     List<ResponseDataOrderCode> products;
-
+    HttpRequest httpRequest;
+    ArrayList<Order> listOrder;
+    ArrayList<String> orderCodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,10 @@ public class OrderHistoryActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        listOrder = new ArrayList<>();
+        httpRequest = new HttpRequest();
+        orderCodes = new ArrayList<>();
 
 //        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -73,6 +83,31 @@ public class OrderHistoryActivity extends AppCompatActivity {
             public void onClick(View v) {
               //  startActivity(new Intent(OrderHistoryActivity.this, MainActivity.class));
                 finish();
+            }
+        });
+
+        httpRequest.callAPI().getListOrder().enqueue(new Callback<com.example.sweethub.Model.Response<ArrayList<Order>>>() {
+            @Override
+            public void onResponse(Call<com.example.sweethub.Model.Response<ArrayList<Order>>> call, retrofit2.Response<com.example.sweethub.Model.Response<ArrayList<Order>>> response) {
+                if(response.isSuccessful()){
+                    if(response.body().getStatus() == 200){
+                        listOrder.clear();
+                        listOrder.addAll(response.body().getData());
+
+                        // Tạo danh sách orderCodes
+                        for (Order order : listOrder) {
+                            orderCodes.add(order.getOrder_code());
+                        }
+
+                        // Gọi hàm lấy chi tiết đơn hàng
+                        fetchOrderDetails(orderCodes);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.example.sweethub.Model.Response<ArrayList<Order>>> call, Throwable t) {
+                Log.d("ttttt", "onFailure: "+ t.getMessage());
             }
         });
 
@@ -118,13 +153,55 @@ public class OrderHistoryActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(adapter);
 
 
-        List<String> orderCodes = Arrays.asList("LDYGCF", "LDYCCM", "LDYNXC");
+//        List<String> orderCodes = Arrays.asList("LDYGCF", "LDYCCM", "LDYNXC");
 
+//        List<ResponseDataOrderCode> allOrders = new ArrayList<>();
+//        for (String orderCode : orderCodes) {
+//            String url = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
+//            String jsonBody = "{\"order_code\": \"" + orderCode + "\"}";
+//            OkHttpClient client = new OkHttpClient();
+//            RequestBody body = RequestBody.create(jsonBody, MediaType.get("application/json; charset=utf-8"));
+//
+//            Request request = new Request.Builder()
+//                    .url(url)
+//                    .addHeader("Content-Type", "application/json")
+//                    .addHeader("Token", "09248b0c-acdc-11ef-accc-c6f6f22065b5")
+//                    .post(body)
+//                    .build();
+//
+//            String responseBody = "";
+//            try (Response response = client.newCall(request).execute()) {
+//                if (response.isSuccessful()) {
+//                    responseBody = response.body().string();
+//                    Log.d("Response Body", responseBody);
+//
+//                    Gson gson = new Gson();
+//                    ResponseDataOrderCode responseData = gson.fromJson(responseBody, ResponseDataOrderCode.class);
+//
+//                    allOrders.add(responseData);
+//                    Log.d("eeeeeee", "onCreate: " + allOrders.size());
+//                } else {
+//                    Log.d("Error", "Request failed: " + response.code());
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//
+//        OrderAdapter adapter = new OrderAdapter(this, allOrders);
+//        recyclerView.setAdapter(adapter);
+    }
+
+    private void fetchOrderDetails(List<String> orderCodes) {
         List<ResponseDataOrderCode> allOrders = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
         for (String orderCode : orderCodes) {
             String url = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
             String jsonBody = "{\"order_code\": \"" + orderCode + "\"}";
-            OkHttpClient client = new OkHttpClient();
             RequestBody body = RequestBody.create(jsonBody, MediaType.get("application/json; charset=utf-8"));
 
             Request request = new Request.Builder()
@@ -134,10 +211,9 @@ public class OrderHistoryActivity extends AppCompatActivity {
                     .post(body)
                     .build();
 
-            String responseBody = "";
             try (Response response = client.newCall(request).execute()) {
                 if (response.isSuccessful()) {
-                    responseBody = response.body().string();
+                    String responseBody = response.body().string();
                     Log.d("Response Body", responseBody);
 
                     Gson gson = new Gson();
@@ -152,12 +228,20 @@ public class OrderHistoryActivity extends AppCompatActivity {
             }
         }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Cập nhật RecyclerView
+        runOnUiThread(() -> {
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        OrderAdapter adapter = new OrderAdapter(this, allOrders);
-        recyclerView.setAdapter(adapter);
+            OrderAdapter adapter = new OrderAdapter(this, allOrders);
+            recyclerView.setAdapter(adapter);
+
+            Log.d("RecyclerView", "Adapter updated with orders");
+        });
     }
+
+
+
 
 
 }

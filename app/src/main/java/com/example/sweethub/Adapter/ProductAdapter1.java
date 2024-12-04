@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
@@ -109,9 +110,34 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
         holder.btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProduct.add(product);
-                // Cập nhật RecyclerView để hiển thị các sản phẩm đã thêm
-                notifyDataSetChanged();
+                Cart cart = new Cart();
+                cart.setId_product(product.get_id());
+                cart.setName(product.getName());
+                cart.setPrice(product.getPrice());
+                cart.setDescribe(product.getDescribe());
+                cart.setImage(product.getImage().get(0));
+                cart.setQuantity("1");
+                cart.setId_category(product.getId_category().getId());
+
+
+                Log.d("mmmmmm", "onClick: " +product.getId_category().getId() + "---" + product.getId() );
+                httpRequest.callAPI().addCart(cart).enqueue(new Callback<Response<Cart>>() {
+                    @Override
+                    public void onResponse(Call<Response<Cart>> call, retrofit2.Response<Response<Cart>> response) {
+                        if(response.isSuccessful()){
+                            if(response.body().getStatus() == 200){
+                                Toast.makeText(context, "Thêm giỏ hàng thành công  !!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Response<Cart>> call, Throwable t) {
+                        Log.d("tttttttt", "onFailure: " + t.getMessage());
+                    }
+                });
+
+
             }
         });
 
@@ -139,6 +165,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                 });
             }
         });
+
 
 //        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
