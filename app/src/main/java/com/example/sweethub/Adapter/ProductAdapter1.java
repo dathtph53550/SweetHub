@@ -33,7 +33,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
     ArrayList<Product> list;
     FruitClick fruitClick;
     HttpRequest httpRequest;
-    String id_Cate;
     ArrayList<Product> addProduct = new ArrayList<>();
 
     public ProductAdapter1(Context context, ArrayList<Product> list, FruitClick fruitClick) {
@@ -66,6 +65,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
         holder.tvProductPrice.setText(product.getPrice() + " đ");
         if(product.getImage().get(0) == null){
             Toast.makeText(context, "Image null", Toast.LENGTH_SHORT).show();
+            Glide.with(context)
+                    .load(R.drawable.baseline_broken_image_24)
+                    .into(holder.ivProductImage);
             return;
         }
 //        Log.d("eeeeeee", "onBindViewHolder: " + product.get);
@@ -138,40 +140,42 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Xóa người dùng")
-                        .setMessage("Bạn có chắc chắn muốn xóa người dùng này không?")
-                        .setPositiveButton("Xóa", (dialog, which) -> {
-                            httpRequest.callAPI().deleteProduct(product.get_id()).enqueue(new Callback<Response<Product>>() {
-                                @Override
-                                public void onResponse(Call<Response<Product>> call, retrofit2.Response<Response<Product>> response) {
-                                    if(response.isSuccessful()){
-                                        if(response.body().getStatus() == 200){
-                                            list.remove(product);
-                                            notifyDataSetChanged();
-                                            Toast.makeText(context, "Xóa thành công", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<Response<Product>> call, Throwable t) {
-                                    Log.d("zzzz", "onFailure: " + t.getMessage());
-                                }
-                            });
-                        })
-                        .setNegativeButton("Hủy", (dialog, which) -> {
-                            dialog.dismiss();
-                        });
-                builder.create().show();
-
-
-                return false;
-            }
-        });
+//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                Log.d("zzzzz", "onLongClick: " + product.getId());
+//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                builder.setTitle("Xóa người dùng")
+//                        .setMessage("Bạn có chắc chắn muốn xóa người dùng này không?")
+//                        .setPositiveButton("Xóa", (dialog, which) -> {
+//                            httpRequest.callAPI().deleteProduct(product.getId()).enqueue(new Callback<Response<ArrayList<Product>>>() {
+//                                @Override
+//                                public void onResponse(Call<Response<ArrayList<Product>>> call, retrofit2.Response<Response<ArrayList<Product>>> response) {
+//                                    if(response.isSuccessful()){
+//                                        if(response.body().getStatus() == 200){
+//                                            list.clear();
+//                                            list.addAll(response.body().getData());
+//                                            notifyDataSetChanged();
+//                                        }
+//                                    }
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<Response<ArrayList<Product>>> call, Throwable t) {
+//
+//                                }
+//                            });
+//
+//                        })
+//                        .setNegativeButton("Hủy", (dialog, which) -> {
+//                            dialog.dismiss();
+//                        });
+//                builder.create().show();
+//
+//
+//                return false;
+//            }
+//        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -68,7 +68,13 @@ public class LoginActivity extends AppCompatActivity {
         iv_guest = findViewById(R.id.iv_guest);
         httpRequest = new HttpRequest();
 
+
         // Cấu hình Google Sign-In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))  // Lấy ID từ `google-services.json`
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
 

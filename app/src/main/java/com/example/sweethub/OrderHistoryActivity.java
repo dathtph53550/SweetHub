@@ -157,11 +157,6 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
         OrderAdapter adapter = new OrderAdapter(this, allOrders);
         recyclerView.setAdapter(adapter);
-
-
-
-
-
     }
 
 

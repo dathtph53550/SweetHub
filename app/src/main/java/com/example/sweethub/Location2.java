@@ -100,7 +100,7 @@ public class Location2 extends AppCompatActivity {
 
 
 
-        Log.d("aaaaaaaaa", "onClick: "+ product.getName()+ "  -  "+ product.getPrice()+ "  -  "+ product.get_id() + "  -  "+ product.getQuantity());
+        Log.d("aaaaaaaaa", "onClick: "+ product.getName()+ "  -  "+ product.getPrice()+ "  -  "+ product.getId() + "  -  "+ product.getQuantity());
 
 
         btn_order.setOnClickListener(new View.OnClickListener() {
@@ -124,11 +124,11 @@ public class Location2 extends AppCompatActivity {
                 if (WardCode.equals("")) return;
                 Log.d("ccccc", "onClick: " + WardCode);
                 Log.d("bbbbb", "Thành Công !!");
-                Log.d("aaaaaaaaa", "onClick: "+ product.getName()+ "  -  "+ product.getPrice()+ "  -  "+ product.get_id() + "  -  "+ product.getQuantity());
+                Log.d("aaaaaaaaa", "onClick: "+ product.getName()+ "  -  "+ product.getPrice()+ "  -  "+ product.getId() + "  -  "+ product.getQuantity());
                 GHNItem ghnItem = new GHNItem();
                 ghnItem.setName(product.getName());
                 ghnItem.setPrice(Integer.parseInt(product.getPrice()) * Integer.parseInt(product.getQuantity()));
-                ghnItem.setCode(product.get_id());
+                ghnItem.setCode(product.getId());
                 ghnItem.setQuantity(Integer.parseInt(product.getQuantity()));
                 ghnItem.setWeight(50);
                 ArrayList<GHNItem> items = new ArrayList<>();

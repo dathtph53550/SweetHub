@@ -27,7 +27,7 @@ import retrofit2.http.Query;
 
 public interface ApiServices {
 
-    public String IPv4 = "192.168.1.8";
+    public String IPv4 = "192.168.0.100";
 
     public static String BASE_URL() {
         return String.format("http://%s:3000/api/", IPv4);
