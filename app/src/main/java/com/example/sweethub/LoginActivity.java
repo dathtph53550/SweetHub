@@ -95,6 +95,12 @@ public class LoginActivity extends AppCompatActivity {
             user.setUsername(_username);
             user.setPassword(_password);
 
+            if(_username.isEmpty() || _password.isEmpty()){
+                if(_username.isEmpty()) txtUser.setError("Vui lòng nhập tên đăng nhập");
+                if(_password.isEmpty()) txtPass.setError("Vui lòng nhập mật khẩu");
+                return;
+            }
+
             if (_username.equals("admin") && _password.equals("adminpass")) {
                 // Hardcoded admin login, no need to call API
                 Toast.makeText(LoginActivity.this, "Đăng nhập thành công với quyền Admin", Toast.LENGTH_SHORT).show();
