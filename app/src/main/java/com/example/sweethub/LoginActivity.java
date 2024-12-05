@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (_username.equals("admin") && _password.equals("adminpass")) {
                 // Hardcoded admin login, no need to call API
-                Toast.makeText(LoginActivity.this, "Đăng nhập thành công với quyền Admin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Đăng nhập thành công với quyền Admin!", Toast.LENGTH_SHORT).show();
 
 
                 SharedPreferences sharedPreferences = getSharedPreferences("INFO", MODE_PRIVATE);
