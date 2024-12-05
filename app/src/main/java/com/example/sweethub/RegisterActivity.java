@@ -98,21 +98,58 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Xử lý nút Đăng ký
         btnSignUp.setOnClickListener(v -> {
-            RequestBody _username = RequestBody.create(MediaType.parse("multipart/form-data"),txtUsername.getText().toString().trim());
-            RequestBody _password = RequestBody.create(MediaType.parse("multipart/form-data"),txtPass.getText().toString().trim());
-            RequestBody _email = RequestBody.create(MediaType.parse("multipart/form-data"),txtEmail.getText().toString().trim());
-            RequestBody _name = RequestBody.create(MediaType.parse("multipart/form-data"),txtName.getText().toString().trim());
-            MultipartBody.Part multipartBody;
-            if (file !=null) {
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file);
-                multipartBody = MultipartBody.Part.createFormData("avartar",file.getName(),requestFile);
-            }else {
-                multipartBody = null;
+
+            String username = txtUsername.getText().toString().trim();
+            String password = txtPass.getText().toString().trim();
+            String email = txtEmail.getText().toString().trim();
+            String name = txtName.getText().toString().trim();
+
+            // Kiểm tra hợp lệ
+            boolean isValid = true;
+
+            if (username.isEmpty()) {
+                txtUsername.setError("Vui lòng nhập tên đăng nhập");
+                isValid = false;
             }
-            Log.d("zzzzzz", "onClick: " + _name);
-            httpRequest.callAPI().register(_username,_password,_email,_name,multipartBody).enqueue(responseUser);
-//            }
+            if (password.isEmpty()) {
+                txtPass.setError("Vui lòng nhập mật khẩu");
+                isValid = false;
+            } else if (password.length() < 6) {
+                txtPass.setError("Mật khẩu phải có ít nhất 6 ký tự");
+                isValid = false;
+            }
+            if (email.isEmpty()) {
+                txtEmail.setError("Vui lòng nhập email");
+                isValid = false;
+            }
+            if (name.isEmpty()) {
+                txtName.setError("Vui lòng nhập tên");
+                isValid = false;
+            }
+
+            // Nếu không hợp lệ, thoát khỏi xử lý
+            if (!isValid) {
+                return;
+            }
+
+            // Tạo RequestBody
+            RequestBody _username = RequestBody.create(MediaType.parse("multipart/form-data"), username);
+            RequestBody _password = RequestBody.create(MediaType.parse("multipart/form-data"), password);
+            RequestBody _email = RequestBody.create(MediaType.parse("multipart/form-data"), email);
+            RequestBody _name = RequestBody.create(MediaType.parse("multipart/form-data"), name);
+
+            // Xử lý file (avatar)
+            MultipartBody.Part multipartBody = null;
+            if (file != null) {
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+                multipartBody = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+            }
+
+            // Gửi yêu cầu API
+            Log.d("zzzzzzzzzz", "Đang gửi thông tin đăng ký: " + name);
+            httpRequest.callAPI().register(_username, _password, _email, _name, multipartBody).enqueue(responseUser);
         });
+
 
 
         // Chuyển sang màn hình Đăng nhập
