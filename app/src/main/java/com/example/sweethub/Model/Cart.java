@@ -1,5 +1,10 @@
 package com.example.sweethub.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Cart  implements Serializable {
@@ -120,4 +125,6 @@ public class Cart  implements Serializable {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+
 }

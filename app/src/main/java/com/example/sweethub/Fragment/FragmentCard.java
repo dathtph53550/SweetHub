@@ -1,5 +1,7 @@
 package com.example.sweethub.Fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,8 +17,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sweethub.Adapter.AdapterCard;
+import com.example.sweethub.Adapter.AdapterOrderCard;
 import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Response;
+import com.example.sweethub.PaidSuccess;
 import com.example.sweethub.Payment;
 import com.example.sweethub.R;
 import com.example.sweethub.servers.HttpRequest;
@@ -35,6 +39,8 @@ public class FragmentCard extends Fragment {
     AdapterCard adapter;
     ArrayList<Cart> list;
     HttpRequest httpRequest;
+    double totalPrice = 0.0;
+    int quantity = 0;
 
 
     @Nullable
@@ -61,17 +67,18 @@ public class FragmentCard extends Fragment {
                 list.addAll(response.body().getData());
                 Log.d("pppppp", "onResponse: " + list.size());
                 // Tính tổng giá trị
-                double totalPrice = 0.0;
+                totalPrice = 0.0;
+                quantity = 0;
                 for (Cart cart : list) {
                     try {
                         // Nếu giá trị là String, cần chuyển đổi sang double
                         totalPrice += Double.parseDouble(cart.getPrice()) * Integer.parseInt(cart.getQuantity());
+                        quantity += Integer.parseInt(cart.getQuantity());
                     } catch (NumberFormatException e) {
                         Log.e("TotalError", "Invalid price or quantity: " + e.getMessage());
                     }
                 }
-                Log.d("zzzzzzzzzz", "onViewCreated: " + list.get(list.size() - 1).getName());
-
+                Log.d("oooooooooo", "onResponse: " + quantity);
 
                 // Cập nhật TextView
                 totall.setText("Total: " + totalPrice + " đ");
@@ -89,12 +96,69 @@ public class FragmentCard extends Fragment {
         checkOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), Payment.class));
+                openDialogCart();
             }
         });
 
 
     }
+
+    void openDialogCart(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = ((Activity)getContext()).getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_checkout,null);
+        builder.setView(v);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+
+        //anh xa
+        RecyclerView ryc = v.findViewById(R.id.ryc);
+        TextView totalAmount = v.findViewById(R.id.totalAmount);
+        Button orderButton = v.findViewById(R.id.orderButton);
+        TextView quantityy = v.findViewById(R.id.quantity);
+        AdapterOrderCard adapterOrderCard = new AdapterOrderCard(getContext(),list);
+
+        totalAmount.setText(totalPrice + " đ");
+        quantityy.setText(quantity+"");
+
+        httpRequest.callAPI().getListCart().enqueue(new Callback<Response<ArrayList<Cart>>>() {
+            @Override
+            public void onResponse(Call<Response<ArrayList<Cart>>> call, retrofit2.Response<Response<ArrayList<Cart>>> response) {
+                if(response.isSuccessful()){
+                    if(response.body().getStatus() == 200){
+                        list.clear();
+                        list.addAll(response.body().getData());
+                        ryc.setAdapter(adapterOrderCard);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Response<ArrayList<Cart>>> call, Throwable t) {
+
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Payment.class);
+                intent.putExtra("amount",totalPrice);
+                intent.putExtra("quantity", quantity);
+                startActivity(intent);
+
+            }
+        });
+
+
+
+
+
+    }
+
+
 
 
 }
