@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             user.setPassword(_password);
 
             if (_username.isEmpty() || _password.isEmpty()) {
-                if(_username.isEmpty()) txtUser.setError("Vui lòng nhập tên đăng nhập!!!!");
+                if(_username.isEmpty()) txtUser.setError("Vui lòng nhập tên đăng nhập!!!");
                 if(_password.isEmpty()) txtPass.setError("Vui lòng nhập mật khẩu!!!!");
                 return;
             }

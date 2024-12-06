@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 else if (password.length() < 6) {
-                    txtPass.setError("Mật khẩu không được để trống và phải có ít nhất 6 ký tự");
+                    txtPass.setError("Mật khẩu không được để trống và phải có ít nhất 6 ký tự!");
                     txtPass.requestFocus();
                     return;
                 }
