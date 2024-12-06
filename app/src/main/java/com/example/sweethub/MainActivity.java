@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.sweethub.Fragment.FragmentCard;
 import com.example.sweethub.Fragment.FragmentFavourite;
+import com.example.sweethub.Fragment.FragmentFeedBack;
 import com.example.sweethub.Fragment.FragmentHome;
 import com.example.sweethub.Fragment.FragmentTest;
 import com.example.sweethub.Fragment.FragmentUser;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentFavourite fragmentFavourite = new FragmentFavourite();
     FragmentUser fragmentUser = new FragmentUser();
     FragmentTest fragmentTest = new FragmentTest();
+    FragmentFeedBack fragmentFeedBack = new FragmentFeedBack();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +54,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
+
         String email = intent.getStringExtra("userName");
         int role = intent.getIntExtra("role", 0);
         Log.d("zzz", "onCreate: " + email + "Role: " + role);
 
+
+
         Bundle bundle = new Bundle();
         bundle.putString("email",email);
         bottomNavigationView = findViewById(R.id.bottom_nav01);
+        if(role == 0){
+            bottomNavigationView.getMenu().findItem(R.id.nav_feedback).setVisible(false);;
+        }
 
         fragmentHome.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
@@ -84,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(item.getItemId() == R.id.nav_user){
                     fr = fragmentUser;
+                    fr.setArguments(bundle);
+                }
+                else if(item.getItemId() == R.id.nav_feedback){
+                    fr = fragmentFeedBack;
+                    fr.setArguments(bundle);
                 }
                 else{
                     fr = fragmentHome;

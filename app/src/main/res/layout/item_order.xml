@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:elevation="4dp"
+    android:layout_margin="8dp">
+
+    <!-- Mã đơn hàng -->
+    <TextView
+        android:id="@+id/tv_order_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mã đơn hàng: 1669735307748"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textSize="14sp" />
+
+    <!-- Họ tên -->
+    <TextView
+        android:id="@+id/tv_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Họ tên: Tincoder"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- Số điện thoại -->
+    <TextView
+        android:id="@+id/tv_customer_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Số điện thoại: 03598659865"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- Địa chỉ nhận -->
+    <TextView
+        android:id="@+id/tv_customer_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Địa chỉ nhận: Hoan Kiem, Ha Noi"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- Thực đơn -->
+    <TextView
+        android:id="@+id/tv_order_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- Gà rang muối (76 000 VNĐ) - Số lượng: 3"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- Ngày đặt hàng -->
+    <TextView
+        android:id="@+id/tv_order_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ngày đặt hàng: 29-11-2022, 10:21 PM"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <!-- Tổng tiền -->
+    <TextView
+        android:id="@+id/tv_total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tổng tiền: 228 000 VNĐ"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <!-- Thanh toán -->
+    <TextView
+        android:id="@+id/tv_payment_method"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thanh toán: Tiền mặt"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+</LinearLayout>

@@ -3,6 +3,7 @@ package com.example.sweethub.servers;
 
 import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
+import com.example.sweethub.Model.FeedBack;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
 import com.example.sweethub.Model.User;
@@ -117,6 +118,14 @@ public interface ApiServices {
 
     @DELETE("deleteCart/{id}")
     Call<Response<ArrayList<Cart>>> deleteCart(@Path("id") String id);
+
+
+    @GET("getListFeedBack")
+    Call<Response<ArrayList<FeedBack>>> getListFeedback();
+
+    @POST("add_feedback")
+    Call<Response<FeedBack>> addFeedBack(@Body FeedBack feedBack);
+
 
 }
 

@@ -105,32 +105,32 @@ public class RegisterActivity extends AppCompatActivity {
             String name = txtName.getText().toString().trim();
 
             // Kiểm tra hợp lệ
-            boolean isValid = true;
-
-            if (username.isEmpty()) {
-                txtUsername.setError("Vui lòng nhập tên đăng nhập");
-                isValid = false;
-            }
-            if (password.isEmpty()) {
-                txtPass.setError("Vui lòng nhập mật khẩu");
-                isValid = false;
-            } else if (password.length() < 6) {
-                txtPass.setError("Mật khẩu phải có ít nhất 6 ký tự");
-                isValid = false;
-            }
-            if (email.isEmpty()) {
-                txtEmail.setError("Vui lòng nhập email");
-                isValid = false;
-            }
-            if (name.isEmpty()) {
-                txtName.setError("Vui lòng nhập tên");
-                isValid = false;
-            }
-
-            // Nếu không hợp lệ, thoát khỏi xử lý
-            if (!isValid) {
-                return;
-            }
+//            boolean isValid = true;
+//
+//            if (username.isEmpty()) {
+//                txtUsername.setError("Vui lòng nhập tên đăng nhập");
+//                isValid = false;
+//            }
+//            if (password.isEmpty()) {
+//                txtPass.setError("Vui lòng nhập mật khẩu");
+//                isValid = false;
+//            } else if (password.length() < 6) {
+//                txtPass.setError("Mật khẩu phải có ít nhất 6 ký tự");
+//                isValid = false;
+//            }
+//            if (email.isEmpty()) {
+//                txtEmail.setError("Vui lòng nhập email");
+//                isValid = false;
+//            }
+//            if (name.isEmpty()) {
+//                txtName.setError("Vui lòng nhập tên");
+//                isValid = false;
+//            }
+//
+//            // Nếu không hợp lệ, thoát khỏi xử lý
+//            if (!isValid) {
+//                return;
+//            }
 
             // Tạo RequestBody
             RequestBody _username = RequestBody.create(MediaType.parse("multipart/form-data"), username);
@@ -170,6 +170,9 @@ public class RegisterActivity extends AppCompatActivity {
                 }else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thất bại lỗi" + response.body().getStatus(), Toast.LENGTH_SHORT).show();
                 }
+            }
+            else{
+                Toast.makeText(RegisterActivity.this, "Đăng ký thất bại lỗi" + response.code(), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -252,5 +255,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
             });
+
+
 
 }
