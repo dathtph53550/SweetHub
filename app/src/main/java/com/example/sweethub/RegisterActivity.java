@@ -107,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(username.isEmpty() || password.isEmpty() || email.isEmpty() || name.isEmpty()) {
                     if(username.isEmpty()) txtUsername.setError("Vui lòng nhập tên đăng nhập!!");
                     if(password.isEmpty()) txtPass.setError("Vui lòng nhập mật khẩu!!!!");
-                    if(email.isEmpty()) txtEmail.setError("Vui lòng nhập email!!");
+                    if(email.isEmpty()) txtEmail.setError("Vui lòng nhập email!!!");
                     if(name.isEmpty()) txtName.setError("Vui lòng nhập tên!!!");
                     return;
                 }
