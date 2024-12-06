@@ -1,6 +1,8 @@
 package com.example.sweethub.Model;
 
-public class Cart {
+import java.io.Serializable;
+
+public class Cart  implements Serializable {
     private String _id,name,price,describe,image,quantity,id_category,id_product,createdAt,updatedAt;
     Product product;
     Category category;

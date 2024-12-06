@@ -1,5 +1,6 @@
 package com.example.sweethub.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sweethub.Adapter.AdapterCard;
 import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Response;
+import com.example.sweethub.Payment;
 import com.example.sweethub.R;
 import com.example.sweethub.servers.HttpRequest;
 
@@ -68,6 +70,8 @@ public class FragmentCard extends Fragment {
                         Log.e("TotalError", "Invalid price or quantity: " + e.getMessage());
                     }
                 }
+                Log.d("zzzzzzzzzz", "onViewCreated: " + list.get(list.size() - 1).getName());
+
 
                 // Cập nhật TextView
                 totall.setText("Total: " + totalPrice + " đ");
@@ -78,7 +82,18 @@ public class FragmentCard extends Fragment {
             public void onFailure(Call<Response<ArrayList<Cart>>> call, Throwable t) {
                 Log.d("ppppp", "onFailure: " + t.getMessage());
             }
+
         });
+
+
+        checkOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), Payment.class));
+            }
+        });
+
+
     }
 
 

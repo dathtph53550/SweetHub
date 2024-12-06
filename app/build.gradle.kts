@@ -34,6 +34,12 @@ android {
         viewBinding = true
         dataBinding = true
     }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/NOTICE")
+    }
 }
 
 dependencies {
@@ -67,6 +73,8 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
 
+
+    implementation("vn.payos:payos-java:1.0.3")
 
 
 }
