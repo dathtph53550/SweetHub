@@ -25,7 +25,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#6200EE"
+                android:background="#F54749"
                 android:padding="16dp"
                 android:text="Add Product"
                 android:textColor="#FFFFFF"

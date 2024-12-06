@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -96,23 +97,54 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-        // Xử lý nút Đăng ký
         btnSignUp.setOnClickListener(v -> {
-            RequestBody _username = RequestBody.create(MediaType.parse("multipart/form-data"),txtUsername.getText().toString().trim());
-            RequestBody _password = RequestBody.create(MediaType.parse("multipart/form-data"),txtPass.getText().toString().trim());
-            RequestBody _email = RequestBody.create(MediaType.parse("multipart/form-data"),txtEmail.getText().toString().trim());
-            RequestBody _name = RequestBody.create(MediaType.parse("multipart/form-data"),txtName.getText().toString().trim());
+            // Lấy dữ liệu từ các trường nhập liệu
+            String username = txtUsername.getText().toString().trim();
+            String password = txtPass.getText().toString().trim();
+            String email = txtEmail.getText().toString().trim();
+            String name = txtName.getText().toString().trim();
+
+                if(username.isEmpty() || password.isEmpty() || email.isEmpty() || name.isEmpty()) {
+                    if(username.isEmpty()) txtUsername.setError("Vui lòng nhập tên đăng nhập");
+                    if(password.isEmpty()) txtPass.setError("Vui lòng nhập mật khẩu");
+                    if(email.isEmpty()) txtEmail.setError("Vui lòng nhập email");
+                    if(name.isEmpty()) txtName.setError("Vui lòng nhập tên");
+                    return;
+                }
+
+                else if (password.length() < 6) {
+                    txtPass.setError("Mật khẩu không được để trống và phải có ít nhất 6 ký tự");
+                    txtPass.requestFocus();
+                    return;
+                }
+                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    txtEmail.setError("Email không hợp lệ");
+                    txtEmail.requestFocus();
+                    return;
+                } else if(file == null) {
+                    Toast.makeText(RegisterActivity.this, "Vui lòng chọn ảnh đại diện", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            // Tạo các RequestBody cho API
+            RequestBody _username = RequestBody.create(MediaType.parse("multipart/form-data"), username);
+            RequestBody _password = RequestBody.create(MediaType.parse("multipart/form-data"), password);
+            RequestBody _email = RequestBody.create(MediaType.parse("multipart/form-data"), email);
+            RequestBody _name = RequestBody.create(MediaType.parse("multipart/form-data"), name);
+
+            // Xử lý file avatar (nếu có)
             MultipartBody.Part multipartBody;
-            if (file !=null) {
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"),file);
-                multipartBody = MultipartBody.Part.createFormData("avartar",file.getName(),requestFile);
-            }else {
+            if (file != null) {
+                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+                multipartBody = MultipartBody.Part.createFormData("avartar", file.getName(), requestFile);
+            } else {
                 multipartBody = null;
             }
-            Log.d("zzzzzz", "onClick: " + _name);
-            httpRequest.callAPI().register(_username,_password,_email,_name,multipartBody).enqueue(responseUser);
-//            }
+
+            // Gửi yêu cầu đến API
+            httpRequest.callAPI().register(_username, _password, _email, _name, multipartBody).enqueue(responseUser);
         });
+
 
 
         // Chuyển sang màn hình Đăng nhập
