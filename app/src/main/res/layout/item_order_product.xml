@@ -6,6 +6,7 @@
     android:orientation="vertical"
     app:cardCornerRadius="15dp"
     android:padding="8dp"
+    android:layout_margin="10dp"
     android:backgroundTint="#FFF59D"
     >
 
@@ -16,36 +17,73 @@
        android:padding="15dp"
        android:orientation="vertical">
 
-       <TextView
-           android:id="@+id/tvName"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Product Name"
-           android:textSize="16sp"
-           android:textColor="#000"
-           android:layout_marginBottom="4dp"
-           android:fontFamily="sans-serif-medium" />
 
-       <!-- TextView hiển thị giá sản phẩm -->
-       <TextView
-           android:id="@+id/tvPrice"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Price: 0 đ"
-           android:textSize="14sp"
-           android:textColor="#4CAF50"
-           android:layout_marginBottom="4dp"
-           android:fontFamily="sans-serif" />
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:weightSum="3"
+           android:orientation="horizontal">
 
-       <!-- TextView hiển thị số lượng sản phẩm -->
+           <TextView
+               android:id="@+id/tvName"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Product Name"
+               android:textSize="16sp"
+               android:textColor="#000"
+               android:layout_weight="1"
+               android:layout_marginBottom="4dp"
+               android:fontFamily="sans-serif-medium" />
+
+           <!-- TextView hiển thị giá sản phẩm -->
+           <TextView
+               android:id="@+id/tvPrice"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Price: 0 đ"
+               android:textSize="14sp"
+               android:layout_marginLeft="18dp"
+               android:textColor="@color/black"
+               android:textStyle="bold"
+               android:layout_weight="1"
+               android:layout_marginBottom="4dp"
+               android:fontFamily="sans-serif" />
+
+           <!-- TextView hiển thị số lượng sản phẩm -->
+           <TextView
+               android:id="@+id/tvQuantity"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Quantity: 0"
+               android:textSize="14sp"
+               android:layout_marginLeft="18dp"
+               android:textStyle="bold"
+               android:layout_weight="1"
+               android:textColor="#000"
+               android:fontFamily="sans-serif" />
+
+
+       </LinearLayout>
+
+       <View
+           android:layout_width="match_parent"
+           android:background="@color/black"
+           android:layout_height="1dp"/>
+
        <TextView
-           android:id="@+id/tvQuantity"
+           android:id="@+id/tvTongTien"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="Quantity: 0"
-           android:textSize="14sp"
-           android:textColor="#000"
+           android:textSize="20sp"
+           android:layout_marginLeft="18dp"
+            android:layout_gravity="end"
+           android:layout_margin="15dp"
+           android:textStyle="bold"
+           android:textColor="#D71414"
            android:fontFamily="sans-serif" />
+
+
    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

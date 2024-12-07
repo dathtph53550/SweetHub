@@ -14,6 +14,9 @@ public class OrderCart {
         this.quantity = quantity;
     }
 
+
+
+
     // Getters
     public ArrayList<String> getName() {
         return name;
@@ -40,12 +43,5 @@ public class OrderCart {
         this.quantity = quantity;
     }
 
-    @Override
-    public String toString() {
-        return "OrderCart{" +
-                "name=" + name +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
-    }
+
 }

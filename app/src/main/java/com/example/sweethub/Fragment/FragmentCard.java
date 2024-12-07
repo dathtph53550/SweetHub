@@ -25,6 +25,7 @@ import com.example.sweethub.Payment;
 import com.example.sweethub.R;
 import com.example.sweethub.servers.HttpRequest;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -80,8 +81,12 @@ public class FragmentCard extends Fragment {
                 }
                 Log.d("oooooooooo", "onResponse: " + quantity);
 
+                Locale vnLocale = new Locale("vi", "VN");
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(vnLocale);
                 // Cập nhật TextView
-                totall.setText("Total: " + totalPrice + " đ");
+                totall.setText("Total: " + currencyFormat.format(totalPrice));
+
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -149,17 +154,9 @@ public class FragmentCard extends Fragment {
                 intent.putExtra("quantity", quantity);
                 intent.putParcelableArrayListExtra("cartList", list);
                 startActivity(intent);
-
             }
         });
-
-
-
-
-
     }
-
-
 
 
 }

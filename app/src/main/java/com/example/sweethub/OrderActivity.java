@@ -46,6 +46,8 @@ public class OrderActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         recyclerView = findViewById(R.id.recyclerView);
         list = new ArrayList<>();
+        adapter = new AdapterOrderCart(OrderActivity.this, list);
+        recyclerView.setAdapter(adapter);
 
         httpRequest.callAPI().getListOrderCart().enqueue(new Callback<Response<ArrayList<OrderCart>>>() {
             @Override
@@ -54,17 +56,8 @@ public class OrderActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     if (response.body() != null && response.body().getStatus() == 200) {
-                        list.addAll(response.body().getData());
-                        OrderCart orderCart = list.get(0);
-
-                        // Truyền dữ liệu vào Adapter
-                        adapter = new AdapterOrderCart(
-                                OrderActivity.this,
-                                orderCart.getName(),
-                                orderCart.getPrice(),
-                                orderCart.getQuantity()
-                        );
-                        recyclerView.setAdapter(adapter);
+                        list.clear();
+                        list.addAll(response.body().getData()); // Thêm tất cả sản phẩm vào list
                         adapter.notifyDataSetChanged();
                     } else {
                         Log.d("API Error", "Status code is not 200, or body is null");

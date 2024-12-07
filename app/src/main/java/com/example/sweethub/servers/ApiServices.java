@@ -5,6 +5,7 @@ import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.FeedBack;
 import com.example.sweethub.Model.OrderCart;
+import com.example.sweethub.Model.OrderCartt;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
 import com.example.sweethub.Model.User;
@@ -127,11 +128,14 @@ public interface ApiServices {
     @POST("add_feedback")
     Call<Response<FeedBack>> addFeedBack(@Body FeedBack feedBack);
 
-    @GET("/getListOrderCart")
+    @GET("getListOrderCart")
     Call<Response<ArrayList<OrderCart>>> getListOrderCart();
 
-    @POST("/addListOrderCart")
-    Call<Response<OrderCart>> addListOrderCart(@Body ArrayList<OrderCart> orderCartList);
+    @POST("addListOrderCart")
+    Call<Response<OrderCartt>> addListOrderCart(@Body ArrayList<OrderCartt> orderCartList);
+
+    @DELETE("clearListOrderCart")
+    Call<Response> clearListOrderCart();
 
 
 }

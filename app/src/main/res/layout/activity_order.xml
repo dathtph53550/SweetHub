@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Order History"
+            android:text="Payment History"
             android:textSize="20sp"
             android:textColor="#000000"
             android:fontFamily="sans-serif-medium" />
