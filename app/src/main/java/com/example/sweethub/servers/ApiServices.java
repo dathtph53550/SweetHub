@@ -4,6 +4,7 @@ package com.example.sweethub.servers;
 import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.FeedBack;
+import com.example.sweethub.Model.OrderCart;
 import com.example.sweethub.Model.Product;
 import com.example.sweethub.Model.Response;
 import com.example.sweethub.Model.User;
@@ -41,12 +42,12 @@ public interface ApiServices {
     @GET("search-distributor")
     Call<Response<ArrayList<Category>>> searchDistributor(@Query("key") String key);
 
-    @POST("add_distributor")
-    Call<Response<ArrayList<Category>>> addDistributor(@Body Category category);
+    @POST("add_Catagory")
+    Call<Response<ArrayList<Category>>> addCategory(@Body Category category);
 
 
-    @PUT("updateDistributorById/{id}")
-    Call<Response<ArrayList<Category>>> updateDistributor(@Path("id") String id, @Body Category category);
+    @PUT("updateCategoryById/{id}")
+    Call<Response<ArrayList<Category>>> updateCategory(@Path("id") String id, @Body Category category);
 
     @DELETE("destroyDistributorById/{id}")
     Call<Response<ArrayList<Category>>> deleteDistributor(@Path("id") String id);
@@ -125,6 +126,12 @@ public interface ApiServices {
 
     @POST("add_feedback")
     Call<Response<FeedBack>> addFeedBack(@Body FeedBack feedBack);
+
+    @GET("/getListOrderCart")
+    Call<Response<ArrayList<OrderCart>>> getListOrderCart();
+
+    @POST("/addListOrderCart")
+    Call<Response<OrderCart>> addListOrderCart(@Body ArrayList<OrderCart> orderCartList);
 
 
 }

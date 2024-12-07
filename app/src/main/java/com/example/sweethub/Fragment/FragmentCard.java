@@ -147,6 +147,7 @@ public class FragmentCard extends Fragment {
                 Intent intent = new Intent(getContext(), Payment.class);
                 intent.putExtra("amount",totalPrice);
                 intent.putExtra("quantity", quantity);
+                intent.putParcelableArrayListExtra("cartList", list);
                 startActivity(intent);
 
             }

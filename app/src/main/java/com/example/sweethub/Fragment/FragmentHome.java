@@ -1,6 +1,7 @@
 package com.example.sweethub.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,6 +67,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     private int currentPosition = 0;
     ProductAdapter1 adapterProduct;
     FloatingActionButton btnAdd;
+    FloatingActionButton btnAddCategory;
 
     RecyclerView rycCategory;
     ArrayList<Category> listCate;
@@ -99,6 +101,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
         db = FirebaseFirestore.getInstance();
         httpRequest = new HttpRequest();
         btnAdd = view.findViewById(R.id.btnAdd);
+        btnAddCategory = view.findViewById(R.id.btnAddCategory);
         //getListCategory nhe
         rycCategory = view.findViewById(R.id.rycCategory);
         listCate = new ArrayList<>();
@@ -116,8 +119,10 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
         // Hide FloatingActionButton for guests (role == 0)
         if (role == 0) {
             btnAdd.setVisibility(View.GONE);
+            btnAddCategory.setVisibility(View.GONE);
         } else {
             btnAdd.setVisibility(View.VISIBLE);
+            btnAddCategory.setVisibility(View.VISIBLE);
         }
 
 
@@ -223,10 +228,6 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
             }
         });
 
-        // Setup Event Listeners for Buttons (Category Filter)
-//        btnCake.setOnClickListener(v -> filterProductsByCategory("Cake"));
-//        btnDonuts.setOnClickListener(v -> filterProductsByCategory("Donuts"));
-//        btnCookies.setOnClickListener(v -> filterProductsByCategory("Cookies"));
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,37 +235,24 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
             }
         });
 
+        btnAddCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialogAddCategory();
+            }
+        });
 
 
 
-//        docDuLieu();
-        // Setup slideshow
+
+
         setupSlideshow();
 
-        // Load product data
-//        loadProducts();
-        // Search functionality
+
 
     }
 
 
-    // Category filter
-//    private void filterProductsByCategory(String category) {
-//        List<Product> filteredList = new ArrayList<>();
-//        for (Product product : productList) {
-//            if (product.getCategory().equalsIgnoreCase(category)) {
-//                filteredList.add(product);
-//            }
-//        }
-//        if (filteredList.isEmpty()) {
-//            Toast.makeText(getContext(), "No products found in " + category, Toast.LENGTH_SHORT).show();
-//        }
-//        filteredProducts.clear();
-//        filteredProducts.addAll(filteredList);
-//        productAdapter.notifyDataSetChanged();
-//    }
-
-    // Set up slideshow with images
     private void setupSlideshow() {
         List<Integer> images = new ArrayList<>();
         images.add(R.drawable.cake_banner); // Correct usage of resource ID
@@ -288,60 +276,56 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     }
 
 
-//    Callback<Response<ArrayList<Category>>> getListCate =new Callback<Response<ArrayList<Category>>>() {
-//        @Override
-//        public void onResponse(Call<Response<ArrayList<Category>>> call, retrofit2.Response<Response<ArrayList<Category>>> response) {
-//            if (response.isSuccessful()) {
-//                if (response.body().getStatus() == 200) {
-//                    listCate = response.body().getData();
-////                    list.clear();
-////                    list.addAll(list);
-//                    getData(listCate);
-////                    adapter.notifyDataSetChanged();
-//                    Log.d("zz", "onResponse: "+ "da vo day");
-//
-//                    Log.d("zz", "onResponse: "+ listCate.size());
-//                }
-//                else {
-//                    Log.d("zz", "onResponse: "+ "khong thi day");
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<Response<ArrayList<Category>>> call, Throwable t) {
-//            Log.d("loi", "onFailure: " + t.getMessage());
-//        }
-//    };
+    void showDialogAddCategory(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_category,null);
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        //anh xa
+        EditText edtCategory = view.findViewById(R.id.edtCategory);
+        Button btnAdd = view.findViewById(R.id.btnThem);
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = edtCategory.getText().toString();
+                if(name.isEmpty()){
+                    Toast.makeText(getContext(), "Vui lòng nhập tên category", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Category category = new Category();
+                    category.setName(name);
+                    httpRequest.callAPI().addCategory(category).enqueue(new Callback<Response<ArrayList<Category>>>() {
+                        @Override
+                        public void onResponse(Call<Response<ArrayList<Category>>> call, retrofit2.Response<Response<ArrayList<Category>>> response) {
+                            if(response.isSuccessful()){
+                                if(response.body().getStatus() == 200){
+                                    listCate.clear();
+                                    listCate = response.body().getData();
+                                    adapterCate = new CategoryAdapter(getContext(),listCate,FragmentHome.this);
+                                    rycCategory.setAdapter(adapterCate);
+                                    adapterCate.notifyDataSetChanged();
+                                    Toast.makeText(getContext(), "Thêm Category Thành Công !!", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+
+                                }
+                            }
+                            else Toast.makeText(getContext(), "Thêm Category không thành công !!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Response<ArrayList<Category>>> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
 
 
-
-
-
-
-    // Load products into the list
-//    private void loadProducts() {
-//        Product product = new Product();
-//        product.setName("Baba");
-//        productList.add(product);
-//
-////        Category category = new Category();
-////        category.setName("Cake");
-////        listCate.add(category);
-////
-////        Category category1 = new Category();
-////        category1.setName("Cake");
-////        listCate.add(category1);
-//
-////        productList.add(new Product("Royal Fudge Cake with Tobleron", "Cake", 2000, R.drawable.cake2));
-////        productList.add(new Product("Classic Sansrival", "Cake", 2050, R.drawable.cake3));
-////        productList.add(new Product("Customized Cake Rainbow", "Cake", 2100, R.drawable.cake4));
-//
-//        filteredProducts.addAll(productList);
-//        Log.d("mmm", "loadProducts: " + filteredProducts.size());
-//        productAdapter.notifyDataSetChanged();
-//
-//    }
 
     @Override
     public void delete(Product product) {

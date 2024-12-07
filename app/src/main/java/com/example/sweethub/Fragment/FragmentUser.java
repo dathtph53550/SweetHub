@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.sweethub.EditProfileActivity;
 import com.example.sweethub.FeedBackActivity;
 import com.example.sweethub.LoginActivity;
+import com.example.sweethub.OrderActivity;
 import com.example.sweethub.OrderHistoryActivity;
 import com.example.sweethub.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,6 +78,14 @@ public class FragmentUser extends Fragment {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+        });
+
+        LinearLayout order = view.findViewById(R.id.order);
+        order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), OrderActivity.class));
+            }
         });
 
     }

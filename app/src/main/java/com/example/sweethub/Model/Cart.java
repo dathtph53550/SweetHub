@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class Cart  implements Serializable {
+public class Cart  implements Serializable,Parcelable {
     private String _id,name,price,describe,image,quantity,id_category,id_product,createdAt,updatedAt;
     Product product;
     Category category;
@@ -126,5 +126,36 @@ public class Cart  implements Serializable {
         this.category = category;
     }
 
+    protected Cart(Parcel in) {
+        name = in.readString();
+        describe = in.readString();
+        price = in.readString();
+        quantity = in.readString();
+    }
 
+    public static final Creator<Cart> CREATOR = new Creator<Cart>() {
+        @Override
+        public Cart createFromParcel(Parcel in) {
+            return new Cart(in);
+        }
+
+        @Override
+        public Cart[] newArray(int size) {
+            return new Cart[size];
+        }
+    };
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(describe);
+        dest.writeString(price);
+        dest.writeString(quantity);
+    }
 }
