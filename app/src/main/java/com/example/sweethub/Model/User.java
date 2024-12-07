@@ -1,7 +1,7 @@
 package com.example.sweethub.Model;
 
 public class User {
-    private String _id,username,password,email,name,avartar,available;
+    private String _id,username,password,email,name,avartar,available,address;
     private String createdAt,updatedAt;
 
     public User(String _id, String username, String password, String email, String name, String avartar, String available, String createdAt, String updatedAt) {
@@ -12,6 +12,19 @@ public class User {
         this.name = name;
         this.avartar = avartar;
         this.available = available;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public User(String _id, String username, String password, String email, String name, String avartar, String available, String address, String createdAt, String updatedAt) {
+        this._id = _id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.avartar = avartar;
+        this.available = available;
+        this.address = address;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -89,5 +102,13 @@ public class User {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

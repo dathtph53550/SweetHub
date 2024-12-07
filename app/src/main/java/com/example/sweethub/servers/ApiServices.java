@@ -137,6 +137,9 @@ public interface ApiServices {
     @DELETE("clearListOrderCart")
     Call<Response> clearListOrderCart();
 
+    @GET("getListUserByUsername")
+    Call<Response<ArrayList<User>>> getUserByEmail(@Query("username") String username);
+
 
 }
 

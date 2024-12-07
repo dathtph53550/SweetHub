@@ -36,6 +36,7 @@ import com.example.sweethub.Adapter.ProductAdapter1;
 import com.example.sweethub.Adapter.SlideshowAdapter;
 import com.example.sweethub.AddProductActivity;
 import com.example.sweethub.DetailProductActivity;
+import com.example.sweethub.GlobalValue;
 import com.example.sweethub.HomeActivity;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
@@ -52,6 +53,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +63,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick,CategoryAdapter.CateClick{
+    private static final Logger log = LoggerFactory.getLogger(FragmentHome.class);
     FirebaseFirestore db;
     private EditText etSearch;
     private ViewPager2 viewPagerSlideshow;
@@ -73,7 +78,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     ArrayList<Category> listCate;
     CategoryAdapter adapterCate;
     HttpRequest  httpRequest;
-    String data;
+    String address,username;
     TextView tvGreeting;
 
 
@@ -84,10 +89,10 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            data = bundle.getString("email");
-            // Sử dụng dữ liệu
-            Log.d("aliiiiiiiii", "Received data: " + data);
+        if(bundle != null){
+            address = bundle.getString("address");
+            username = bundle.getString("username");
+            Log.d("888", "onCreateView: " + username);
         }
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -110,9 +115,9 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
         etSearch = view.findViewById(R.id.etSearch);
         tvGreeting = view.findViewById(R.id.tvGreeting);
 
-        tvGreeting.setText("Hi, "+ data);
+//        tvGreeting.setText("Hi,"+ username);
 
-//        Intent intent = new Intent(getActivity(), AddProductActivity.class);
+
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("INFO", Context.MODE_PRIVATE);
         int role = sharedPreferences.getInt("role", -1);
 
@@ -343,7 +348,7 @@ public class FragmentHome extends Fragment implements ProductAdapter1.FruitClick
     public void showDetail(Product product) {
         Intent intent = new Intent(getContext(), DetailProductActivity.class);
         intent.putExtra("product", product);
-        intent.putExtra("email",data);
+        intent.putExtra("email",username);
         startActivity(intent);
     }
 

@@ -6,6 +6,7 @@ public class OrderCart {
     private ArrayList<String> name;
     private ArrayList<String> price;
     private ArrayList<String> quantity;
+    private String address;
 
     // Constructor
     public OrderCart(ArrayList<String> name, ArrayList<String> price, ArrayList<String> quantity) {
@@ -14,8 +15,12 @@ public class OrderCart {
         this.quantity = quantity;
     }
 
-
-
+    public OrderCart(ArrayList<String> name, ArrayList<String> price, ArrayList<String> quantity, String address) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.address = address;
+    }
 
     // Getters
     public ArrayList<String> getName() {
@@ -43,5 +48,11 @@ public class OrderCart {
         this.quantity = quantity;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

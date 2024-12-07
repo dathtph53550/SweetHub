@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putInt("role", 0);  // 0 for guest
                 editor.apply();
                 intent.putExtra("userName","Guest");
-                intent.putExtra("role", 0);
+                intent.putExtra("role", 3);
                 startActivity(intent);
             } else {
                 Log.w("LoginActivity", "signInAnonymously:failure", task.getException());

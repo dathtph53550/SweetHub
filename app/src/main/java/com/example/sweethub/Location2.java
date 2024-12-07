@@ -142,6 +142,11 @@ public class Location2 extends AppCompatActivity {
                         items
                 );
                 request.callAPI().GHNOrder(sendOrderRequest).enqueue(responseOrder);
+
+
+
+
+
             }
         });
 

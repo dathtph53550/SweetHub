@@ -2,6 +2,7 @@ package com.example.sweethub.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.sweethub.DetailProductActivity;
+import com.example.sweethub.GlobalValue;
+import com.example.sweethub.Location2;
 import com.example.sweethub.Model.Cart;
 import com.example.sweethub.Model.Category;
 import com.example.sweethub.Model.Product;
@@ -36,6 +41,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
     HttpRequest httpRequest;
     ArrayList<Product> addProduct = new ArrayList<>();
 
+
     public ProductAdapter1(Context context, ArrayList<Product> list, FruitClick fruitClick) {
         this.context = context;
         this.list = list;
@@ -54,12 +60,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
     @Override
     public void onBindViewHolder(@NonNull ProductHolder holder, int position) {
 
-//        if (list == null || list.isEmpty()) {
-//            Log.d("ProductAdapter", "List is empty or null.");
-//            return; // Exit early if the list is empty
-//        }
-
-        // Now it's safe to access elements from the list
         httpRequest = new HttpRequest();
         Product product = list.get(position);
         holder.tvProductName.setText(product.getName());
@@ -71,7 +71,6 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                     .into(holder.ivProductImage);
             return;
         }
-//        Log.d("eeeeeee", "onBindViewHolder: " + product.get);
         Log.d("image", "onBindViewHolder: " + product.getImage().get(0));
         Log.d("favourite", "onBindViewHolder: " + product.getFavorite());
         if (product.getFavorite()) {
@@ -110,6 +109,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
         holder.btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Cart cart = new Cart();
                 cart.setId_product(product.get_id());
                 cart.setName(product.getName());
@@ -136,9 +136,9 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                         Log.d("tttttttt", "onFailure: " + t.getMessage());
                     }
                 });
-
-
             }
+
+
         });
 
 
@@ -167,42 +167,7 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
         });
 
 
-//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Log.d("zzzzz", "onLongClick: " + product.getId());
-//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                builder.setTitle("Xóa người dùng")
-//                        .setMessage("Bạn có chắc chắn muốn xóa người dùng này không?")
-//                        .setPositiveButton("Xóa", (dialog, which) -> {
-//                            httpRequest.callAPI().deleteProduct(product.getId()).enqueue(new Callback<Response<ArrayList<Product>>>() {
-//                                @Override
-//                                public void onResponse(Call<Response<ArrayList<Product>>> call, retrofit2.Response<Response<ArrayList<Product>>> response) {
-//                                    if(response.isSuccessful()){
-//                                        if(response.body().getStatus() == 200){
-//                                            list.clear();
-//                                            list.addAll(response.body().getData());
-//                                            notifyDataSetChanged();
-//                                        }
-//                                    }
-//                                }
 //
-//                                @Override
-//                                public void onFailure(Call<Response<ArrayList<Product>>> call, Throwable t) {
-//
-//                                }
-//                            });
-//
-//                        })
-//                        .setNegativeButton("Hủy", (dialog, which) -> {
-//                            dialog.dismiss();
-//                        });
-//                builder.create().show();
-//
-//
-//                return false;
-//            }
-//        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
