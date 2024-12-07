@@ -125,7 +125,6 @@ public class FragmentCard extends Fragment {
         TextView totalAmount = v.findViewById(R.id.totalAmount);
         Button orderButton = v.findViewById(R.id.orderButton);
         TextView quantityy = v.findViewById(R.id.quantity);
-        EditText edtAddress = v.findViewById(R.id.edtAddress);
         AdapterOrderCard adapterOrderCard = new AdapterOrderCard(getContext(),list);
 
         totalAmount.setText(totalPrice + " đ");
@@ -152,15 +151,10 @@ public class FragmentCard extends Fragment {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String address = edtAddress.getText().toString();
-                if(address.isEmpty()){
-                    Toast.makeText(getContext(), "Vui lòng nhập địa chỉ !!!", Toast.LENGTH_SHORT).show();
-                }
+
                 Intent intent = new Intent(getContext(), Payment.class);
                 intent.putExtra("amount",totalPrice);
                 intent.putExtra("quantity", quantity);
-                intent.putExtra("address",address);
-                Log.d("6666", "onClick: " + address);
                 intent.putParcelableArrayListExtra("cartList", list);
                 startActivity(intent);
             }
