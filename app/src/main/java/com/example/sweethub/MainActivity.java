@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putString("email",user.getEmail());
                             bundle.putString("name",user.getName());
                             bundle.putString("avartar",user.getAvartar());
-                            bundle.putInt("role",role);
                             Log.d("999", "onResponse: " + user.getAddress() + user.getUsername());
                         }
 
@@ -129,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         if(role == 0 || role == 3){
             bottomNavigationView.getMenu().findItem(R.id.nav_feedback).setVisible(false);;
         }
+
+        bundle.putInt("role",role);
+
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frag_container002, fragmentHome)

@@ -56,6 +56,7 @@ public class FragmentUser extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Log.d("5555", "onViewCreated: " + role);
         if(role == 3){
             Toast.makeText(getContext(), "Bạn cần phải đăng nhập !!!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getContext(), LoginActivity.class);

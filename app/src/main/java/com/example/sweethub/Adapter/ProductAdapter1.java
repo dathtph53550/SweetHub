@@ -28,7 +28,9 @@ import com.example.sweethub.R;
 import com.example.sweethub.servers.ApiServices;
 import com.example.sweethub.servers.HttpRequest;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -113,7 +115,10 @@ public class ProductAdapter1 extends RecyclerView.Adapter<ProductAdapter1.Produc
                 Cart cart = new Cart();
                 cart.setId_product(product.get_id());
                 cart.setName(product.getName());
-                cart.setPrice(product.getPrice());
+                Locale vnLocale = new Locale("vi", "VN");
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(vnLocale);
+                // Cập nhật TextView
+                cart.setPrice(currencyFormat.format(Double.parseDouble(product.getPrice())) + "");
                 cart.setDescribe(product.getDescribe());
                 cart.setImage(product.getImage().get(0));
                 cart.setQuantity("1");
