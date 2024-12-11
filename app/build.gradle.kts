@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sweethub"
+    namespace = "com.nhom7.sweethub"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.sweethub"
+        applicationId = "com.nhom7.sweethub"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -35,16 +35,16 @@
 
         <!-- Search Box -->
         <EditText
-            android:id="@+id/etSearch"
+            android:id="@+id/ettSearch"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/search_box_background"
-            android:hint="Search"
-            android:paddingStart="15dp"
-            android:imeOptions="actionSearch"
             android:drawableStart="@drawable/sert"
             android:drawablePadding="8dp"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:paddingStart="15dp"
             android:singleLine="true"
             android:textSize="14sp" />
 

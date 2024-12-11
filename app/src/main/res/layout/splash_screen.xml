@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/pink"
-    tools:context=".Splash_ScreenActivity">
+    tools:context="com.nhom7.sweethub.Splash_ScreenActivity">
 
     <ImageView
         android:layout_width="wrap_content"

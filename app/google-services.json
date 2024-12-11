@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:417451429880:android:09aa488ef550dc151f900d",
         "android_client_info": {
-          "package_name": "com.example.sweethub"
+          "package_name": "com.nhom7.sweethub"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "417451429880-4f8ho14mr9j18lnpkv9n5hpp6lautp56.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.sweethub",
+            "package_name": "com.nhom7.sweethub",
             "certificate_hash": "8de4ba7b0c71f8d30358f55dc157dcb0646d362e"
           }
         },

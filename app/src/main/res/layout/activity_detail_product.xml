@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFCDD3"
-    tools:context=".DetailProductActivity">
+    tools:context="com.nhom7.sweethub.DetailProductActivity">
 
     <!-- Nội dung chính -->
     <LinearLayout

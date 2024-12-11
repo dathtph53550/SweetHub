@@ -27,54 +27,40 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".OrderActivity"
+            android:name="com.nhom7.sweethub.OrderActivity"
             android:exported="false" />
         <activity
-            android:name=".CheckOutActivity"
+            android:name="com.nhom7.sweethub.CheckOutActivity"
             android:exported="false" />
         <activity
-            android:name=".Location2"
+            android:name="com.nhom7.sweethub.Location2"
             android:exported="false" />
         <activity
-            android:name=".DetailProductActivity"
+            android:name="com.nhom7.sweethub.DetailProductActivity"
             android:exported="false" />
         <activity
-            android:name=".UpdateProductActivity"
+            android:name="com.nhom7.sweethub.UpdateProductActivity"
             android:exported="false" />
         <activity
-            android:name=".Payment"
+            android:name="com.nhom7.sweethub.Payment"
             android:exported="false" />
         <activity
-            android:name=".PaidSuccess"
+            android:name="com.nhom7.sweethub.PaidSuccess"
             android:exported="false" />
         <activity
-            android:name=".AddProductActivity"
+            android:name="com.nhom7.sweethub.AddProductActivity"
             android:exported="false" />
         <activity
-            android:name=".Splash_ScreenActivity"
+            android:name="com.nhom7.sweethub.IntroductionActivity"
             android:exported="false" />
         <activity
-            android:name=".FeedBackActivity"
+            android:name="com.nhom7.sweethub.FeedBackActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name="com.nhom7.sweethub.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".OrderHistoryActivity"
-            android:exported="false" />
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
-        <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterActivity"
+            android:name="com.nhom7.sweethub.OrderHistoryActivity"
             android:exported="false" />
 
         <meta-data
@@ -82,7 +68,21 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.nhom7.sweethub.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.nhom7.sweethub.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.nhom7.sweethub.RegisterActivity"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.nhom7.sweethub.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -96,10 +96,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".IntroductionActivity"
+            android:name="com.nhom7.sweethub.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.nhom7.sweethub.Splash_ScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
